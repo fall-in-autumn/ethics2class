@@ -39,10 +39,10 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-brand-100">
 
-    <!-- Header -->
+    <!-- Header (Optimized layout to keep navigation items in one single line without wrapping) -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
-            <div class="flex items-center space-x-2">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row justify-between items-center lg:space-x-4 space-y-3 lg:space-y-0">
+            <div class="flex items-center space-x-2 shrink-0">
                 <span class="text-3xl">🌱</span>
                 <div>
                     <h1 class="text-xl font-black text-slate-900 tracking-tight flex items-center">
@@ -51,15 +51,17 @@
                     <p class="text-xs text-slate-500 font-medium">II-2-1 갈등이란 무엇이고 어떻게 해결할까?</p>
                 </div>
             </div>
-            <!-- Expanded navigation to accommodate new steps -->
-            <div class="flex flex-wrap gap-1 bg-slate-100 p-1 rounded-lg text-xs md:text-sm font-medium justify-center">
-                <button onclick="switchTab('tab-mbti')" id="btn-tab-mbti" class="tab-btn px-2.5 py-1.5 rounded-md transition bg-white text-slate-900 shadow-sm">1. 갈등 MBTI</button>
-                <button onclick="switchTab('tab-meaning')" id="btn-tab-meaning" class="tab-btn px-2.5 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900">2. 의미와 원인</button>
-                <button onclick="switchTab('tab-matching')" id="btn-tab-matching" class="tab-btn px-2.5 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900 font-semibold text-brand-700">2-2. 원인 매칭 게임 🎮</button>
-                <button onclick="switchTab('tab-methods')" id="btn-tab-methods" class="tab-btn px-2.5 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900">3. 해결의 달인</button>
-                <button onclick="switchTab('tab-research')" id="btn-tab-research" class="tab-btn px-2.5 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900 font-semibold text-blue-700">3-2. 갈등 사례 조사 🔍</button>
-                <button onclick="switchTab('tab-nimby')" id="btn-tab-nimby" class="tab-btn px-2.5 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900">4. 님비 vs 핌피</button>
-                <button onclick="switchTab('tab-reflection')" id="btn-tab-reflection" class="tab-btn px-2.5 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900 font-bold text-brand-600">5. 성찰 다짐</button>
+            <!-- Expanded navigation for full width visibility in one line -->
+            <div class="flex items-center justify-center bg-slate-100 p-1 rounded-xl w-full lg:w-auto overflow-x-auto scrollbar-none">
+                <div class="flex space-x-1 whitespace-nowrap min-w-max text-xs md:text-sm font-bold">
+                    <button onclick="switchTab('tab-mbti')" id="btn-tab-mbti" class="tab-btn px-3 py-2 rounded-lg transition bg-white text-slate-900 shadow-sm">1. 갈등 MBTI</button>
+                    <button onclick="switchTab('tab-meaning')" id="btn-tab-meaning" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900">2. 의미와 원인</button>
+                    <button onclick="switchTab('tab-matching')" id="btn-tab-matching" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-700">2-2. 원인 매칭 게임 🎮</button>
+                    <button onclick="switchTab('tab-methods')" id="btn-tab-methods" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900">3. 해결의 달인</button>
+                    <button onclick="switchTab('tab-research')" id="btn-tab-research" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900 text-blue-700">3-2. 갈등 사례 조사 🔍</button>
+                    <button onclick="switchTab('tab-nimby')" id="btn-tab-nimby" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900">4. 님비 vs 핌피</button>
+                    <button onclick="switchTab('tab-reflection')" id="btn-tab-reflection" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-600">5. 성찰 다짐 🎓</button>
+                </div>
             </div>
         </div>
     </header>
@@ -115,7 +117,6 @@
                     </p>
                 </div>
 
-                <!-- Added Submit Button between Restart and Next as requested -->
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
                     <button onclick="restartMbti()" class="w-full sm:w-auto px-5 py-2 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 transition text-sm font-bold">
                         다시 테스트하기 🔄
@@ -155,7 +156,6 @@
                     </div>
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center">
                         <div class="relative overflow-hidden rounded-lg aspect-[4/5] mb-2 bg-white max-w-[200px] border border-slate-100 shadow-sm">
-                            <!-- Updated path to local asset: ./images/chiktree.png -->
                             <img src="./images/chiktree.png" alt="칡과 등나무의 얽힘" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/300x375?text=칡과+등나무';" />
                         </div>
                         <span class="text-xs text-slate-500 font-bold">▲ 왼쪽(칡) / 오른쪽(등나무) 실제 덩굴</span>
@@ -262,7 +262,7 @@
                 </div>
             </div>
 
-            <!-- Next button to the brand new interactive game step -->
+            <!-- Next button to matching game -->
             <div class="flex justify-center mt-8">
                 <button onclick="switchTab('tab-matching')" class="px-8 py-3 bg-brand-600 text-white rounded-xl hover:bg-brand-700 font-bold transition shadow-md shadow-brand-100">
                     원인 확인하기: 갈등 원인 매칭 게임방 입장하기 🎮 ➔
@@ -270,7 +270,7 @@
             </div>
         </section>
 
-        <!-- [NEW STEP 2-2]: 갈등 원인 매칭 게임 -->
+        <!-- STEP 2-2: 갈등 원인 매칭 게임 -->
         <section id="tab-matching" class="tab-content hidden">
             <div class="text-center mb-8">
                 <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 2-2. 상황 판단하기</span>
@@ -442,76 +442,157 @@
             </div>
         </section>
 
-        <!-- [NEW STEP 3-2]: 갈등 사례 인터넷 모의 조사 -->
+        <!-- STEP 3-2: 갈등 사례 인터넷 모의 조사 (Fully Upgraded with Teacher's specific layout requirements) -->
         <section id="tab-research" class="tab-content hidden">
             <div class="text-center mb-8">
                 <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 3-2. 도덕 스마트 탐구</span>
                 <h2 class="text-3xl font-extrabold text-slate-900 mt-2">인터넷 갈등 사례 모의 조사관 🔍</h2>
-                <p class="text-slate-500 mt-2">관심 있는 갈등 원인을 1가지 선택하고 실제 보도되거나 공유된 갈등 사례를 직접 요약하고 출처를 남겨보세요.</p>
+                <p class="text-slate-500 mt-2">관심 있는 갈등 사례를 직접 수집하고 핵심을 정리하여 평화적 해결 대안을 디자인해 보세요.</p>
             </div>
 
             <div class="max-w-3xl mx-auto bg-white border border-slate-100 rounded-2xl shadow-md p-6 md:p-8 space-y-6">
-                <!-- Select Cause -->
-                <div>
-                    <label class="block text-sm font-extrabold text-slate-800 mb-2">1. 깊이 탐구할 갈등 원인을 선택해 주세요.</label>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <label class="flex items-center space-x-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition">
-                            <input type="radio" name="research-cause" value="배려 부족과 오해" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
-                            <span class="text-sm font-bold text-slate-700">배려 부족과 오해</span>
+                
+                <!-- 활동 1: 갈등 원인 선택 -->
+                <div class="border-b border-slate-100 pb-5">
+                    <label class="block text-base font-extrabold text-slate-900 mb-3">
+                        <span class="text-blue-600 mr-1">활동 1.</span> 탐구할 갈등 원인을 선택해 주세요.
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="flex items-center space-x-3 p-3.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition">
+                            <input type="radio" name="research-cause" value="배려 부족과 오해" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-bold text-slate-700">① 배려 부족과 오해</span>
                         </label>
-                        <label class="flex items-center space-x-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition">
-                            <input type="radio" name="research-cause" value="한정된 자원과 이기심" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
-                            <span class="text-sm font-bold text-slate-700">한정된 자원과 이기심 (님비/핌피 등)</span>
+                        <label class="flex items-center space-x-3 p-3.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition">
+                            <input type="radio" name="research-cause" value="한정된 자원과 이기심" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-bold text-slate-700">② 한정된 자원과 이기심</span>
                         </label>
-                        <label class="flex items-center space-x-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition">
-                            <input type="radio" name="research-cause" value="신념과 가치관 차이" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
-                            <span class="text-sm font-bold text-slate-700">신념과 가치관 차이</span>
+                        <label class="flex items-center space-x-3 p-3.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition">
+                            <input type="radio" name="research-cause" value="신념과 가치관 차이" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-bold text-slate-700">③ 신념과 가치관 차이</span>
                         </label>
-                        <label class="flex items-center space-x-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition">
-                            <input type="radio" name="research-cause" value="사회 구조나 제도에 대한 의견 차이" class="w-4 h-4 text-brand-600 focus:ring-brand-500">
-                            <span class="text-sm font-bold text-slate-700">사회 구조나 제도 의견 차이</span>
+                        <label class="flex items-center space-x-3 p-3.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition">
+                            <input type="radio" name="research-cause" value="사회 구조나 제도에 대한 의견 차이" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-bold text-slate-700">④ 사회 구조나 제도 차이</span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Simulation Search bar -->
-                <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-                    <label class="block text-xs font-bold text-blue-900 mb-1">💡 추천 인터넷 검색 키워드 힌트</label>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-3">
-                        • <strong>배려 부족/오해</strong>: '스마트폰 단톡방 오해 갈등', '학교폭력 사소한 소문'<br>
-                        • <strong>한정된 자원</strong>: '우리마을 쓰레기 매립지 갈등', '아파트 주차장 이웃 분쟁'<br>
-                        • <strong>신념/가치관</strong>: '종교 강요 분쟁', '문화적 차이 고부 갈등'<br>
-                        • <strong>사회구조/제도</strong>: '최저임금 협상 타결 지연', '장애인 이동권 엘리베이터 시위'
+                <!-- 안내 박스 (검색 힌트) -->
+                <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100 text-xs text-slate-600 leading-relaxed">
+                    <p class="font-extrabold text-blue-900 mb-1 flex items-center">
+                        <span class="mr-1">🌐</span> 인터넷 검색 가이드
                     </p>
-                    <div class="flex space-x-2">
-                        <input id="research-keyword" type="text" placeholder="검색 또는 조사할 갈등 키워드를 써주세요" class="flex-grow px-4 py-2 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <button onclick="simulateSearch()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition flex items-center space-x-1">
-                            <span>검색하기 🌐</span>
-                        </button>
+                    <p>인터넷 포털(네이버, 구글 등)이나 뉴스 검색을 통해 실제 일어난 갈등 사례를 자유롭게 검색해 온 뒤 아래에 상세 정보를 작성하세요.</p>
+                </div>
+
+                <!-- 활동 2: 조사한 인터넷 자료의 정보 입력 -->
+                <div class="border-b border-slate-100 pb-5 space-y-4">
+                    <label class="block text-base font-extrabold text-slate-900">
+                        <span class="text-blue-600 mr-1">활동 2.</span> 내가 조사한 인터넷 자료 정보 입력하기
+                    </label>
+                    
+                    <div>
+                        <span class="block text-xs font-bold text-slate-400 mb-2">A. 인터넷 자료의 유형을 골라주세요.</span>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <label class="flex items-center justify-center space-x-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold cursor-pointer hover:bg-slate-100 transition">
+                                <input type="radio" name="research-doc-type" value="뉴스 기사" class="w-3.5 h-3.5 text-blue-600">
+                                <span>📰 뉴스 기사</span>
+                            </label>
+                            <label class="flex items-center justify-center space-x-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold cursor-pointer hover:bg-slate-100 transition">
+                                <input type="radio" name="research-doc-type" value="뉴스 영상" class="w-3.5 h-3.5 text-blue-600">
+                                <span>📺 뉴스 영상</span>
+                            </label>
+                            <label class="flex items-center justify-center space-x-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold cursor-pointer hover:bg-slate-100 transition">
+                                <input type="radio" name="research-doc-type" value="칼럼 / 사설" class="w-3.5 h-3.5 text-blue-600">
+                                <span>✍️ 칼럼/사설</span>
+                            </label>
+                            <label class="flex items-center justify-center space-x-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold cursor-pointer hover:bg-slate-100 transition">
+                                <input type="radio" name="research-doc-type" value="기타 자료" class="w-3.5 h-3.5 text-blue-600">
+                                <span>🔗 기타 자료</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <span class="block text-xs font-bold text-slate-400 mb-1">B. 자료의 제목을 작성해 주세요.</span>
+                            <input id="research-title" type="text" placeholder="예: [단독] 아파트 주차 겹주차 분쟁 갈등 폭발" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs font-medium">
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-slate-400 mb-1">C. 자료의 인터넷 주소(URL)를 입력해 주세요.</span>
+                            <input id="research-url" type="text" placeholder="예: https://news.naver.com/... 또는 블로그 주소" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs font-medium">
+                        </div>
                     </div>
                 </div>
 
-                <!-- Simulation Search Result Box (Hidden until clicked) -->
-                <div id="search-sim-result" class="hidden p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                    <span class="text-[10px] uppercase font-bold text-blue-600 tracking-wider">의리T 검색 도우미 검색 결과봇</span>
-                    <p id="search-sim-text" class="text-xs text-slate-600 mt-1 leading-relaxed">...</p>
+                <!-- 활동 3: 육하원칙 갈등 요약 -->
+                <div class="border-b border-slate-100 pb-5 space-y-3">
+                    <label class="block text-base font-extrabold text-slate-900">
+                        <span class="text-blue-600 mr-1">활동 3.</span> 갈등 상황 및 당사자들의 주장 육하원칙 요약하기
+                    </label>
+                    <p class="text-xs text-slate-400 leading-normal mb-2">
+                        누가(Who), 언제(When), 어디서(Where), 무엇을(What), 왜(Why), 어떻게(How) 대립하고 있는지 구체적으로 작성해 봅시다.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-[10px] font-black text-blue-600 uppercase">누가 (Who)</span>
+                            <input id="r-who" type="text" placeholder="예: 아파트 이웃 주민 A씨와 B씨가" class="w-full mt-1 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-[10px] font-black text-blue-600 uppercase">언제 (When)</span>
+                            <input id="r-when" type="text" placeholder="예: 지난 주말 저녁 시간대에" class="w-full mt-1 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-[10px] font-black text-blue-600 uppercase">어디서 (Where)</span>
+                            <input id="r-where" type="text" placeholder="예: 서울의 한 노후 아파트 지하 주차장에서" class="w-full mt-1 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-[10px] font-black text-blue-600 uppercase">무엇을 (What)</span>
+                            <input id="r-what" type="text" placeholder="예: 이중 주차 차량의 이동 전화를 두고" class="w-full mt-1 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-[10px] font-black text-blue-600 uppercase">왜 (Why)</span>
+                            <input id="r-why" type="text" placeholder="예: 주차 자리가 좁아 이중 주차를 불가피하게 하면서" class="w-full mt-1 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-[10px] font-black text-blue-600 uppercase">어떻게 (How)</span>
+                            <input id="r-how" type="text" placeholder="예: 전화를 일부러 거부하는 태도로 심하게 다툼" class="w-full mt-1 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Result fields -->
-                <div class="space-y-4">
+                <!-- 활동 4: 해결할 대안 설계 (협상, 조정, 중재 선택) -->
+                <div class="pb-3 space-y-4">
+                    <label class="block text-base font-extrabold text-slate-900">
+                        <span class="text-blue-600 mr-1">활동 4.</span> 내가 생각한 평화적 해결 전략 수립하기
+                    </label>
+
                     <div>
-                        <label class="block text-sm font-extrabold text-slate-800 mb-2">2. 위 갈등 상황의 내용과 갈등 당사자들의 주장을 요약해 쓰세요.</label>
-                        <textarea id="research-summary" rows="3" placeholder="예: '주민자치회 측에서는 매립지 건설로 인한 악취를 우려해 다른 후보지를 원하고 있으나, 시청 측에서는 이곳이 환경 평가에서 유일하게 통과되어 대체 부지가 없다고 대립함'" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"></textarea>
+                        <span class="block text-xs font-bold text-slate-400 mb-2">A. 이 갈등을 해결하기에 가장 알맞은 평화적 대안 방식 카드는?</span>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="flex items-center justify-center space-x-1.5 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-extrabold cursor-pointer hover:bg-slate-100 transition">
+                                <input type="radio" name="research-resolve-method" value="협상" class="w-4 h-4 text-sky-600 focus:ring-sky-500">
+                                <span>🗣️ 협상</span>
+                            </label>
+                            <label class="flex items-center justify-center space-x-1.5 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-extrabold cursor-pointer hover:bg-slate-100 transition">
+                                <input type="radio" name="research-resolve-method" value="조정" class="w-4 h-4 text-amber-600 focus:ring-amber-500">
+                                <span>🤝 조정</span>
+                            </label>
+                            <label class="flex items-center justify-center space-x-1.5 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-extrabold cursor-pointer hover:bg-slate-100 transition">
+                                <input type="radio" name="research-resolve-method" value="중재" class="w-4 h-4 text-rose-600 focus:ring-rose-500">
+                                <span>⚖️ 중재</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-extrabold text-slate-800 mb-2">3. 조사를 진행한 자료의 출처를 정확히 기록하세요.</label>
-                        <input id="research-source" type="text" placeholder="예: 네이버 뉴스 보도 자료, 네이버 지식백과 시사 상식 사전 등" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                        <span class="block text-xs font-bold text-slate-400 mb-1">B. 선택한 방법과 평화주의 자세(역지사지, 관용 등)를 적용한 구체적인 해결 방안을 자유롭게 제안하세요.</span>
+                        <textarea id="research-resolve-detail" rows="3" placeholder="예: 이웃 주민들이 직접 타협하기 어려운 상태이므로 '조정'을 사용해 아파트 관리소장님(제삼자)의 화해 주도 하에 주차 매뉴얼을 함께 만들고 대화로 풀어야 한다." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"></textarea>
                     </div>
                 </div>
 
                 <!-- Save Action button -->
-                <button onclick="saveResearchData()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl transition shadow-md shadow-blue-100 text-sm">
+                <button onclick="saveResearchData()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl transition shadow-md shadow-blue-100 text-sm">
                     사례 조사 결과 저장하기 📥
                 </button>
                 <p id="research-save-status" class="text-xs text-blue-600 font-bold text-center hidden">✓ 조사 내용이 성공적으로 브라우저에 임시 기록되었습니다. 성찰 보고서에 함께 실립니다!</p>
@@ -977,7 +1058,7 @@
         loadMbtiQuestion();
 
 
-        // 3. STEP 2 Card toggle function (Optimized selection to keep main h4 title unchanged)
+        // 3. STEP 2 Card toggle function
         function toggleCard(elem) {
             const detail = elem.querySelector('.card-detail');
             const btnText = elem.querySelector('.toggle-txt'); // Targets ONLY the toggle button span
@@ -993,7 +1074,7 @@
         }
 
 
-        // [NEW] STEP 2-2: Interactive Matching Puzzle Logic
+        // STEP 2-2: Interactive Matching Puzzle Logic
         let activeSelectedCause = null;
         let selectedScenarioElement = null;
         let scoreCount = 0;
@@ -1062,7 +1143,7 @@
             } else {
                 // Wrong match
                 const wrongToast = document.createElement('div');
-                wrongToast.className = "fixed bottom-5 right-5 bg-rose-600 text-white px-5 py-3 rounded-xl shadow-lg font-bold text-sm z-50 flex items-center space-x-2 animate-shake";
+                wrongToast.className = "fixed bottom-5 right-5 bg-rose-600 text-white px-5 py-3 rounded-xl shadow-lg font-bold text-sm z-50 flex items-center space-x-2";
                 wrongToast.innerHTML = `<span>❌</span> <span>틀렸습니다! 상황을 다시 한번 꼼꼼히 검토해 보세요.</span>`;
                 document.body.appendChild(wrongToast);
                 setTimeout(() => wrongToast.remove(), 2500);
@@ -1070,7 +1151,7 @@
         }
 
 
-        // 4. STEP 3 OX Quiz Checking Logic
+        // STEP 3 OX Quiz Checking Logic
         let quizAnswers = { 1: false, 2: false, 3: false };
         let correctScores = { 1: 'X', 2: 'O', 3: 'O' };
 
@@ -1104,75 +1185,73 @@
         }
 
 
-        // [NEW] STEP 3-2: 갈등 사례 인터넷 모의 조사 로직
-        const mockDbResults = {
-            "배려 부족과 오해": [
-                "📡 [YTN 뉴스 발췌] 청소년 단톡방 내 사소한 말장난이 오해로 번지며 사이버 학교폭력 심의위원회까지 상정된 사례가 발생했습니다. 오해를 푼 뒤 가해학생들은 역지사지 배려 훈련 수료 처분을 받았습니다."
-            ],
-            "한정된 자원과 이기심": [
-                "📡 [도덕일보 기사 발췌] 한 수도권 외곽 마을에 하수종말처리 시설 건립을 두고 시청과 주민자치회가 2년째 격돌 중입니다. 주민들은 지역 환경 오염(님비)을, 시청 측은 필수 보건 자원의 긴급성을 역설하고 있습니다."
-            ],
-            "신념과 가치관 차이": [
-                "📡 [사법저널 소식 발췌] 직장 내 개인 채식 신념을 존중해 주지 않고 단체 고기 회식을 강요한 부서장과 직원 사이의 불화가 인권위원회 제소로 연결되었습니다. 다양성의 가치관을 관용으로 품어야 한다는 교훈을 남겼습니다."
-            ],
-            "사회 구조나 제도에 대한 의견 차이": [
-                "📡 [국민신문고 청원 발췌] 한 대학가 건물에 엘리베이터가 부재하여 지체장애를 가진 대학생이 수강권을 침해받았다고 교육청에 탄원했습니다. 사회구조 및 건축 제도의 조속한 법 개정 대립이 이어지고 있습니다."
-            ]
-        };
-
-        function simulateSearch() {
-            const radioNode = document.querySelector('input[name="research-cause"]:checked');
-            const keyword = document.getElementById('research-keyword').value.trim();
-            
-            if (!radioNode) {
-                alert("검색을 하려면 먼저 '1번 갈등 원인' 중 하나를 필수로 선택해 주세요!");
-                return;
-            }
-            if (!keyword) {
-                alert("검색어를 빈칸 없이 1글자 이상 작성해 주세요!");
-                return;
-            }
-
-            const selectedCause = radioNode.value;
-            const searchBox = document.getElementById('search-sim-result');
-            const searchText = document.getElementById('search-sim-text');
-
-            searchBox.classList.remove('hidden');
-            searchText.innerText = "의리T 검색 데이터베이스에서 자료 매칭 중... 🔍";
-
-            setTimeout(() => {
-                const results = mockDbResults[selectedCause] || ["해당 원인에 관한 일반적인 보도 자료가 발견되었습니다. 내용을 직접 탐색하세요."];
-                searchText.innerHTML = `<strong>키워드 [${keyword}] 검색 결과 성공!</strong><br><br>${results[0]}`;
-            }, 1000);
-        }
-
+        // STEP 3-2: 갈등 사례 인터넷 모의 조사 로직 (Upgraded as per new structured input fields)
         function saveResearchData() {
-            const radioNode = document.querySelector('input[name="research-cause"]:checked');
-            const summary = document.getElementById('research-summary').value.trim();
-            const source = document.getElementById('research-source').value.trim();
+            const causeNode = document.querySelector('input[name="research-cause"]:checked');
+            const docTypeNode = document.querySelector('input[name="research-doc-type"]:checked');
+            const title = document.getElementById('research-title').value.trim();
+            const url = document.getElementById('research-url').value.trim();
+            
+            // 5W1H Fields
+            const who = document.getElementById('r-who').value.trim();
+            const when = document.getElementById('r-when').value.trim();
+            const where = document.getElementById('r-where').value.trim();
+            const what = document.getElementById('r-what').value.trim();
+            const why = document.getElementById('r-why').value.trim();
+            const how = document.getElementById('r-how').value.trim();
+            
+            // Resolve Method & details
+            const resolveMethodNode = document.querySelector('input[name="research-resolve-method"]:checked');
+            const resolveDetail = document.getElementById('research-resolve-detail').value.trim();
 
-            if (!radioNode || !summary || !source) {
-                alert("갈등 원인 선택, 요약 내용 작성, 출처 입력을 모두 마쳐야 저장할 수 있습니다!");
+            // Field verification
+            if (!causeNode) {
+                alert("활동 1에서 탐구할 갈등 원인을 1가지 선택해 주세요!");
+                return;
+            }
+            if (!docTypeNode || !title || !url) {
+                alert("활동 2에서 자료 유형 선택, 제목 입력, URL 링크 입력을 누락 없이 작성해 주세요!");
+                return;
+            }
+            if (!who || !when || !where || !what || !why || !how) {
+                alert("활동 3에서 갈등 상황을 육하원칙(누가, 언제, 어디서, 무엇을, 왜, 어떻게)에 맞게 모두 적어주세요!");
+                return;
+            }
+            if (!resolveMethodNode || !resolveDetail) {
+                alert("활동 4에서 최적의 해결 방법(협상/조정/중재)을 선택하고 그 해결 방안을 상세히 입력해 주세요!");
                 return;
             }
 
-            // Integrate with final Step 5 display
-            const causeText = radioNode.value;
-            const summaryDisplay = document.getElementById('ref-research-style');
-            summaryDisplay.innerHTML = `🔍 <strong>[원인: ${causeText}]</strong><br>• 요약: ${summary}<br>• 출처: <span class="text-blue-600 underline">${source}</span>`;
+            // Sync with final step 5
+            const causeText = causeNode.value;
+            const docType = docTypeNode.value;
+            const resolveMethod = resolveMethodNode.value;
             
-            // Success alert
+            const summaryDisplay = document.getElementById('ref-research-style');
+            summaryDisplay.innerHTML = `
+                <div class="space-y-1.5 text-xs">
+                    <p class="font-extrabold text-blue-800">🔍 연구 원인: ${causeText}</p>
+                    <p>• <strong>출처 정보:</strong> [${docType}] <span class="font-bold text-slate-700">${title}</span> 
+                       (<span class="text-blue-600 underline text-[10px] break-all">${url}</span>)</p>
+                    <p class="bg-white p-2 rounded border border-blue-100 leading-normal">
+                        <strong>📝 육하원칙 요약:</strong> ${who}가 ${when}에 ${where}에서 ${what}을 주제로 ${why}하여 ${how}하게 되었다.
+                    </p>
+                    <p>• <strong>설계한 대안:</strong> <span class="px-1.5 py-0.5 bg-brand-100 text-brand-800 rounded font-bold">${resolveMethod}</span> - ${resolveDetail}</p>
+                </div>
+            `;
+            
+            // Visual success indicator
             document.getElementById('research-save-status').classList.remove('hidden');
 
             const toast = document.createElement('div');
             toast.className = "fixed bottom-5 right-5 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-lg font-bold text-sm z-50 flex items-center space-x-2";
-            toast.innerHTML = `<span>📂</span> <span>조사 결과가 임시 저장되었습니다. 5단계 다짐록에 연동되었습니다!</span>`;
+            toast.innerHTML = `<span>📂</span> <span>조사 정보 분석이 성공적으로 최종 다짐록에 연동되었습니다!</span>`;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2500);
         }
 
 
-        // 5. STEP 4 NIMBY/PIMFY Simulation Logic
+        // STEP 4 NIMBY/PIMFY Simulation Logic
         let satisfaction = 50;
         let builtFacilities = {
             townA: [],
@@ -1253,7 +1332,7 @@
         }
 
 
-        // 6. STEP 5 Reflection Form Submission
+        // STEP 5 Reflection Form Submission
         function submitReflection() {
             const name = document.getElementById('ref-name').value.trim();
             const promise = document.getElementById('ref-promise').value.trim();
@@ -1270,13 +1349,16 @@
             const mbtiText = submittedMbti ? `나의 자가 진단형인 [${submittedMbti}]` : "자가 도덕 진단 스타일";
             const radioNode = document.querySelector('input[name="research-cause"]:checked');
             const causeConcept = radioNode ? `[${radioNode.value}]` : "실제 사회적 이해 대립 원인";
+            const resolveMethodNode = document.querySelector('input[name="research-resolve-method"]:checked');
+            const resolveConcept = resolveMethodNode ? `[${resolveMethodNode.value}]` : "평화로운 평화 전략";
 
             document.getElementById('cert-details').innerHTML = `
                 위 학생은 의리T가 전수하는 <br>
                 <strong class="text-slate-900 font-bold">II-2-1 갈등의 의미 및 해결 방법</strong>을 훌륭히 마스터하고,<br>
                 수업 내에서 <strong>${mbtiText}</strong>을 바르게 인지하는 동시에,<br>
-                현실의 <strong>${causeConcept}</strong> 사례를 훌륭하게 인터넷 분석 완료하였습니다.<br>
-                앞으로 삶속에서 <span class="bg-amber-100 px-1 font-bold text-amber-900">역지사지</span>와 <span class="bg-amber-100 px-1 font-bold text-amber-900">관용</span>의 자세를 평화롭게 실천할 것을 엄숙히 서약하였기에 이 수료증을 수여합니다.
+                현실의 <strong>${causeConcept}</strong> 사례를 수집하여 육하원칙 분석을 마친 후,<br>
+                스스로 그 대안으로 <strong>${resolveConcept}</strong>을 수립하는 도덕 탐구 과정을 완수했습니다.<br>
+                앞으로 삶속에서 <span class="bg-amber-100 px-1 font-bold text-amber-900">역지사지</span>와 <span class="bg-amber-100 px-1 font-bold text-amber-900">관용</span>의 자세를 평화롭게 실천할 것을 약속하였기에 이 수료증을 수여합니다.
             `;
 
             // Hide placeholder, show certificate
@@ -1284,7 +1366,7 @@
             const certDisplay = document.getElementById('cert-display');
             certDisplay.classList.remove('hidden');
 
-            // Tiny alert modal replacement (non-browser alert style)
+            // Tiny alert modal replacement
             const successIndicator = document.createElement('div');
             successIndicator.className = "fixed bottom-5 right-5 bg-brand-600 text-white px-5 py-3 rounded-xl shadow-lg font-bold text-sm z-50 flex items-center space-x-2 animate-bounce";
             successIndicator.innerHTML = `<span>🎓</span> <span>수료증 발급에 성공했습니다!</span>`;
