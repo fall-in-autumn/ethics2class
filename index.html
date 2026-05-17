@@ -35,33 +35,41 @@
         .font-fancy {
             font-family: 'Dongle', sans-serif;
         }
+        /* Custom scrollbar remover to keep navigation ultra-clean */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-brand-100">
 
-    <!-- Header (Optimized layout to keep navigation items in one single line without wrapping) -->
+    <!-- Header (Optimized layout to ensure all 6 steps are visible on a single line across all devices) -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row justify-between items-center lg:space-x-4 space-y-3 lg:space-y-0">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex flex-col xl:flex-row justify-between items-center xl:space-x-4 space-y-2 xl:space-y-0">
             <div class="flex items-center space-x-2 shrink-0">
-                <span class="text-3xl">🌱</span>
+                <span class="text-2xl">🌱</span>
                 <div>
-                    <h1 class="text-xl font-black text-slate-900 tracking-tight flex items-center">
+                    <h1 class="text-base font-black text-slate-900 tracking-tight flex items-center">
                         의리T의 생생 도덕 교실
                     </h1>
-                    <p class="text-xs text-slate-500 font-medium">II-2-1 갈등이란 무엇이고 어떻게 해결할까?</p>
+                    <p class="text-[10px] text-slate-500 font-medium">II-2-1 갈등이란 무엇이고 어떻게 해결할까?</p>
                 </div>
             </div>
-            <!-- Expanded navigation for full width visibility in one line (6 STEPS) -->
-            <div class="flex items-center justify-center bg-slate-100 p-1 rounded-xl w-full lg:w-auto overflow-x-auto scrollbar-none">
-                <div class="flex space-x-1 whitespace-nowrap min-w-max text-xs md:text-sm font-bold">
-                    <button onclick="switchTab('tab-mbti')" id="btn-tab-mbti" class="tab-btn px-3 py-2 rounded-lg transition bg-white text-slate-900 shadow-sm">1. 갈등 MBTI</button>
-                    <button onclick="switchTab('tab-meaning')" id="btn-tab-meaning" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900">2. 의미와 원인</button>
-                    <button onclick="switchTab('tab-matching')" id="btn-tab-matching" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-700">2-2. 갈등 원인 퀴즈 🎯</button>
-                    <button onclick="switchTab('tab-methods')" id="btn-tab-methods" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900">3. 해결의 달인</button>
-                    <button onclick="switchTab('tab-research')" id="btn-tab-research" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900 text-blue-700">3-2. 갈등 사례 조사 🔍</button>
-                    <button onclick="switchTab('tab-nimby')" id="btn-tab-nimby" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900">4. 님비 vs 핌피</button>
-                    <button onclick="switchTab('tab-national')" id="btn-tab-national" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900 text-amber-700">5. 우리나라 갈등 🇰🇷</button>
-                    <button onclick="switchTab('tab-reflection')" id="btn-tab-reflection" class="tab-btn px-3 py-2 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-600 font-black">6. 성찰 다짐 🎓</button>
+            <!-- Expanded navigation for full width visibility in one line without wrapping -->
+            <div class="flex items-center justify-center bg-slate-100 p-1 rounded-xl w-full xl:w-auto overflow-x-auto no-scrollbar">
+                <div class="flex space-x-0.5 whitespace-nowrap min-w-max text-[11px] md:text-xs font-bold">
+                    <button onclick="switchTab('tab-mbti')" id="btn-tab-mbti" class="tab-btn px-2.5 py-1.5 rounded-lg transition bg-white text-slate-900 shadow-sm">1. 갈등 MBTI</button>
+                    <button onclick="switchTab('tab-meaning')" id="btn-tab-meaning" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">2. 의미와 원인</button>
+                    <button onclick="switchTab('tab-matching')" id="btn-tab-matching" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-700">2-2. 갈등 원인 퀴즈 🎯</button>
+                    <button onclick="switchTab('tab-methods')" id="btn-tab-methods" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">3. 해결의 달인</button>
+                    <button onclick="switchTab('tab-research')" id="btn-tab-research" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-blue-700">3-2. 갈등 사례 조사 🔍</button>
+                    <button onclick="switchTab('tab-nimby')" id="btn-tab-nimby" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">4. 님비 vs 핌피</button>
+                    <button onclick="switchTab('tab-national')" id="btn-tab-national" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-amber-700">5. 우리나라 갈등 🇰🇷</button>
+                    <button onclick="switchTab('tab-reflection')" id="btn-tab-reflection" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-600 font-black">6. 성찰 다짐 🎓</button>
                 </div>
             </div>
         </div>
@@ -271,7 +279,7 @@
             </div>
         </section>
 
-        <!-- STEP 2-2: 갈등 원인 격파 퀴즈룸 (Upgraded from matching game) -->
+        <!-- STEP 2-2: 갈등 원인 격파 퀴즈룸 -->
         <section id="tab-matching" class="tab-content hidden">
             <div class="text-center mb-8">
                 <span class="px-3 py-1 bg-rose-100 text-rose-800 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 2-2. 실전 퀴즈 쇼</span>
@@ -294,7 +302,7 @@
                         <p id="game-scenario" class="text-sm text-slate-800 font-medium leading-relaxed">...</p>
                     </div>
 
-                    <!-- Options list (No layout cues/colors that suggest answers) -->
+                    <!-- Options list -->
                     <div id="game-options" class="grid grid-cols-1 gap-2.5">
                         <!-- Dynamic buttons -->
                     </div>
@@ -309,7 +317,7 @@
                     </div>
                 </div>
 
-                <!-- Final result screen (Hidden initially) -->
+                <!-- Final result screen -->
                 <div id="game-result-box" class="hidden text-center py-6 space-y-4">
                     <span class="text-5xl">🏆</span>
                     <h3 class="text-2xl font-black text-slate-900">퀴즈 결과 분석 완료!</h3>
@@ -496,7 +504,7 @@
                     </div>
                 </div>
 
-                <!-- 활동 3: 육하원칙 갈등 요약 (Upgraded to a single free-form textarea) -->
+                <!-- 활동 3: 육하원칙 갈등 요약 (자유 작성형) -->
                 <div class="border-b border-slate-100 pb-5 space-y-3">
                     <label class="block text-base font-extrabold text-slate-900">
                         <span class="text-blue-600 mr-1">활동 3.</span> 조사한 갈등 상황 서술하기 (자유 작성형)
@@ -645,7 +653,17 @@
                 </div>
             </div>
 
-            <!-- Next button to the brand new national conflict step -->
+            <div class="bg-brand-50 rounded-2xl border-2 border-brand-100 p-6 mt-6 max-w-3xl mx-auto">
+                <h4 class="font-bold text-brand-800 flex items-center mb-2 text-sm">
+                    <span class="text-xl mr-1.5">💡</span> 의리T의 생각 나누기 포인트
+                </h4>
+                <p class="text-slate-700 text-xs leading-relaxed">
+                    쓰레기 소각장 같은 혐오 시설은 아무도 자기 뒷마당에 두려 하지 않는 <strong>님비(NIMBY)</strong>가 생기고, KTX역이나 대학병원은 악을 쓰고 자기 집 앞에 놓으려 하는 <strong>핌피(PIMFY)</strong>가 생겨요. <br><br>
+                    이 두 갈등 모두 <span class="font-bold text-slate-900">"내 집, 내 지역만 소중하다"는 집단 이기심</span>이 원인일 수 있어요. 이를 조화롭게 양보하며 풀기 위해선 공적인 배려와 올바른 '보상 및 대화(협상)' 정책이 필수랍니다!
+                </p>
+            </div>
+
+            <!-- Next button -->
             <div class="flex justify-center mt-8">
                 <button onclick="switchTab('tab-national')" class="px-8 py-3 bg-brand-600 text-white rounded-xl hover:bg-brand-700 font-bold transition shadow-md shadow-brand-100">
                     심화 탐구: 5단계 우리나라 사회 갈등 유형 탐색 ➔
@@ -653,7 +671,7 @@
             </div>
         </section>
 
-        <!-- [NEW] STEP 5: 우리나라에서 많이 발생하는 갈등 유형 탐색 -->
+        <!-- STEP 5: 우리나라에서 많이 발생하는 갈등 유형 탐색 -->
         <section id="tab-national" class="tab-content hidden">
             <div class="text-center mb-8">
                 <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 5. 우리 사회 들여다보기</span>
@@ -762,7 +780,7 @@
                 <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
                     <div class="space-y-4">
                         <h3 class="font-bold text-slate-900 text-lg flex items-center">
-                            <span class="mr-2 text-xl">✍|</span> 실천 다짐 작성
+                            <span class="mr-2 text-xl">✍️</span> 실천 다짐 작성
                         </h3>
                         <div>
                             <label class="block text-xs text-slate-400 font-bold mb-1">나의 이름 또는 닉네임</label>
@@ -772,19 +790,19 @@
                         <!-- Auto-filled MBTI Profile Display -->
                         <div class="bg-slate-50 p-3 rounded-lg border border-dashed border-slate-200">
                             <span class="text-[10px] font-bold text-slate-400 block uppercase">연동된 나의 갈등 대처 스타일 (1단계)</span>
-                            <span id="ref-mbti-style" class="text-sm font-black text-slate-700">제출된 MBTI가 아직 없습니다. (도입부 제출 바람)</span>
+                            <span id="ref-mbti-style" class="text-sm font-black text-rose-500">❌ 아직 1단계에서 자가 진단을 제출하지 않았습니다.</span>
                         </div>
 
                         <!-- Auto-filled Research Summary Display -->
                         <div class="bg-blue-50/50 p-3 rounded-lg border border-dashed border-blue-200">
                             <span class="text-[10px] font-bold text-blue-500 block uppercase">내가 진행한 갈등 사례 분석 연구서 (3-2단계)</span>
-                            <div id="ref-research-style" class="text-xs text-slate-600 mt-1 leading-normal italic">사례를 아직 기록하지 않았습니다.</div>
+                            <div id="ref-research-style" class="text-xs text-rose-500 mt-1 leading-normal italic font-semibold">❌ 아직 3-2단계 사례 조사를 저장하지 않았습니다.</div>
                         </div>
 
                         <!-- Auto-filled National Conflict Profile Display -->
                         <div class="bg-amber-50/50 p-3 rounded-lg border border-dashed border-amber-200">
                             <span class="text-[10px] font-bold text-amber-600 block uppercase">내가 판단한 사회적 위협 갈등 (5단계)</span>
-                            <div id="ref-national-style" class="text-xs text-slate-600 mt-1 leading-normal italic">소견 의견을 먼저 상단 '5단계'에 제출해 주세요.</div>
+                            <div id="ref-national-style" class="text-xs text-rose-500 mt-1 leading-normal italic font-semibold">❌ 아직 5단계 사회 분석 소견을 제출하지 않았습니다.</div>
                         </div>
 
                         <div>
@@ -859,6 +877,13 @@
 
     <!-- JS Logic -->
     <script>
+        // Track whether each step has been submitted successfully
+        let stepSubmitted = {
+            mbti: false,
+            research: false,
+            national: false
+        };
+
         // 1. Tab Switching Functionality
         function switchTab(tabId) {
             // Hide all tab contents
@@ -953,7 +978,7 @@
                 emoji: "😇",
                 title: "수용형 (Accommodating)",
                 subtitle: "#엔젤 #착한_아이_콤플렉스",
-                desc: "상대방과의 돈독한 관계를 매우 중시하여 본인의 이익이나 목표를 과감하게 뒤로 미루고, 상대방의 요구나 가치관을 무조건 맞춰주는 헌신형입니다. 가끔은 자신의 의견도 건강하게 말해보세요!"
+                desc: "상대방과의 관계를 매우 중요시하여 자신의 이익이나 목표를 밀쳐 두고, 상대방의 요구와 주장을 여지없이 수용해 버리는 수동형 천사 스타일입니다."
             },
             "타협형": {
                 emoji: "⚖️",
@@ -1033,10 +1058,16 @@
             document.getElementById('result-subtitle').innerText = data.subtitle;
             document.getElementById('result-description').innerText = data.desc;
 
-            // Reset submit button state
-            document.getElementById('mbti-submit-status').classList.add('hidden');
-            document.getElementById('btn-submit-mbti').disabled = false;
-            document.getElementById('btn-submit-mbti').innerHTML = "<span>나의 결과 제출하기 📤</span>";
+            // Reset submit button state if not submitted yet
+            if (!stepSubmitted.mbti) {
+                document.getElementById('mbti-submit-status').classList.add('hidden');
+                document.getElementById('btn-submit-mbti').disabled = false;
+                document.getElementById('btn-submit-mbti').innerHTML = "<span>나의 결과 제출하기 📤</span>";
+            } else {
+                document.getElementById('mbti-submit-status').classList.remove('hidden');
+                document.getElementById('btn-submit-mbti').disabled = true;
+                document.getElementById('btn-submit-mbti').innerHTML = "<span>제출 완료! ✓</span>";
+            }
 
             // Animate card entrance
             setTimeout(() => {
@@ -1048,9 +1079,14 @@
         function restartMbti() {
             currentQuestionIdx = 0;
             mbtiScores = { "회피형": 0, "경쟁형": 0, "수용형": 0, "타협형": 0, "협력형": 0 };
+            stepSubmitted.mbti = false; // Reset submission flag
             
             const resultCard = document.getElementById('mbti-result-card');
             resultCard.classList.add('scale-95', 'opacity-0');
+            
+            // Update step 6 profile warning text
+            document.getElementById('ref-mbti-style').innerText = "❌ 아직 1단계에서 자가 진단을 제출하지 않았습니다.";
+            document.getElementById('ref-mbti-style').className = "text-sm font-black text-rose-500";
             
             setTimeout(() => {
                 resultCard.classList.add('hidden');
@@ -1062,6 +1098,9 @@
         function submitMbtiResult() {
             if (!submittedMbti) return;
             
+            // Set flag
+            stepSubmitted.mbti = true;
+
             // Render on step 6 interface
             document.getElementById('ref-mbti-style').innerText = `✨ ${submittedMbti} (도입 자가 진단 완료)`;
             document.getElementById('ref-mbti-style').className = "text-sm font-black text-brand-600";
@@ -1084,27 +1123,11 @@
         }
 
 
-        // 3. STEP 2 Card toggle function
-        function toggleCard(elem) {
-            const detail = elem.querySelector('.card-detail');
-            const btnText = elem.querySelector('.toggle-txt'); // Targets ONLY the toggle button span
-            if (detail.classList.contains('hidden')) {
-                detail.classList.remove('hidden');
-                btnText.innerText = "상세 닫기 ▴";
-                elem.classList.add('border-brand-500', 'bg-brand-50/20');
-            } else {
-                detail.classList.add('hidden');
-                btnText.innerText = "자세히 보기 ▾";
-                elem.classList.remove('border-brand-500', 'bg-brand-50/20');
-            }
-        }
-
-
         // STEP 2-2: 갈등 원인 격파 10문항 데이터셋 및 로직
         const gameQuestions = [
             {
                 scenario: "A학교의 급식 시간에 민국이는 평소 자신이 가장 좋아하던 제육볶음 반찬을 산더미처럼 가득 떠갔고, 결국 그의 바로 뒷줄에 서 있던 영희는 제육볶음을 배급받지 못해 분배 문제를 두고 배고픔에 눈물이 터져 격한 실랑이가 터졌다.",
-                correct: "한정된 자원과 이기심",
+                correct: "한정된 자원 and 이기심",
                 explain: "특정 반찬이라는 '한정된 자원'을 양보 없이 먼저 차지하려는 이기심이 얽혀 발생한 대표적 분배 갈등입니다."
             },
             {
@@ -1124,7 +1147,7 @@
             },
             {
                 scenario: "준우네 아파트는 가구당 주차 제한이 1대인데, 차량을 2대 이상 소유한 입주민들이 많아지자 매일 밤 주차 공간을 먼저 선점하기 위해 고성을 지르고 주차 콘을 부수는 폭력 사태까지 벌어지고 있다.",
-                correct: "한정된 자원과 이기심",
+                correct: "한정된 자원 and 이기심",
                 explain: "아파트 주차 공간이라는 한정된 인프라(자원)를 자신의 권리만 앞세워 쟁탈하려고 할 때의 이기심 대립입니다."
             },
             {
@@ -1144,7 +1167,7 @@
             },
             {
                 scenario: "아파트 단지 바로 옆에 주민들의 위생을 위해 쓰레기 소각 연소장을 지으려는 시 행정부와, 유독가스 및 건강권을 우려해 절대 집 근처 건립은 불가하다며 화염병 시위를 하는 집단 이웃들 간의 팽팽한 싸움이 계속된다.",
-                correct: "한정된 자원과 이기심",
+                correct: "한정된 자원 and 이기심",
                 explain: "환경 쾌적성이라는 공공 편익(자원)과 님비(NIMBY)로 표현되는 대표적인 이기주의적 구역 분쟁입니다."
             },
             {
@@ -1173,7 +1196,7 @@
             document.getElementById('game-scenario').innerText = q.scenario;
 
             // Options rendering (Neutral styling, no hints)
-            const options = ["배려 부족과 오해", "한정된 자원과 이기심", "신념과 가치관 차이", "사회 구조나 제도에 대한 의견 차이"];
+            const options = ["배려 부족과 오해", "한정된 자원 and 이기심", "신념과 가치관 차이", "사회 구조나 제도에 대한 의견 차이"];
             const container = document.getElementById('game-options');
             container.innerHTML = '';
             document.getElementById('game-feedback').classList.add('hidden');
@@ -1307,16 +1330,18 @@
             
             const summaryDisplay = document.getElementById('ref-research-style');
             summaryDisplay.innerHTML = `
-                <div class="space-y-1.5 text-xs text-left">
+                <div class="space-y-1.5 text-xs text-left text-slate-700">
                     <p class="font-extrabold text-blue-800">🔍 연구 원인: ${causeText}</p>
-                    <p>• <strong>출처 정보:</strong> [${docType}] <span class="font-bold text-slate-700">${title}</span> 
-                       (<span class="text-blue-600 underline text-[10px] break-all">${url}</span>)</p>
-                    <div class="bg-white p-2.5 rounded border border-blue-100 leading-relaxed">
-                        <strong>📝 육하원칙 서술 요약:</strong><br>${freeSummaryText}
+                    <p>• <strong>출처 정보:</strong> [${docType}] <span class="font-bold text-slate-700">${title}</span></p>
+                    <div class="bg-white p-2 border border-blue-100 leading-relaxed rounded text-[11px]">
+                        <strong>📝 요약:</strong> ${freeSummaryText}
                     </div>
-                    <p>• <strong>설계한 대안:</strong> <span class="px-1.5 py-0.5 bg-brand-100 text-brand-800 rounded font-bold">${resolveMethod}</span> - ${resolveDetail}</p>
                 </div>
             `;
+            summaryDisplay.className = "text-xs text-slate-700 mt-1";
+
+            // Mark step as submitted
+            stepSubmitted.research = true;
             
             // Visual success indicator
             document.getElementById('research-save-status').classList.remove('hidden');
@@ -1329,7 +1354,7 @@
         }
 
 
-        // [NEW] STEP 5: 우리나라 사회 갈등 유형 탐색 데이터 처리 로직
+        // STEP 5: 우리나라 사회 갈등 유형 탐색 데이터 처리 로직
         let submittedNationalConflict = "";
         function saveNationalConflict() {
             const natConflictNode = document.querySelector('input[name="nat-conflict"]:checked');
@@ -1354,12 +1379,15 @@
             // Sync with final step 6
             const display = document.getElementById('ref-national-style');
             display.innerHTML = `
-                <div class="space-y-1 text-xs text-left">
-                    <p class="font-extrabold text-amber-800">🇰🇷 사회적 위험 갈등: ${submittedNationalConflict}</p>
-                    <p class="leading-relaxed"><strong>• 발생 원인:</strong> ${reason}</p>
+                <div class="space-y-1 text-xs text-left text-slate-700">
+                    <p class="font-extrabold text-amber-800">🇰🇷 심각한 갈등: ${submittedNationalConflict}</p>
                     <p class="leading-relaxed"><strong>• 해결 방안:</strong> ${solution}</p>
                 </div>
             `;
+            display.className = "text-xs text-slate-700 mt-1";
+
+            // Mark step as submitted
+            stepSubmitted.national = true;
 
             document.getElementById('national-save-status').classList.remove('hidden');
 
@@ -1445,13 +1473,38 @@
         }
 
 
-        // STEP 6 Reflection Form Submission (Upgraded from Step 5)
+        // STEP 6 Reflection Form Submission (With newly added strict cross-step validation rules)
         function submitReflection() {
             const name = document.getElementById('ref-name').value.trim();
             const promise = document.getElementById('ref-promise').value.trim();
 
-            if (!name || !promise) {
-                alert("다짐록을 예쁘게 채워 주세요! (이름과 다짐란은 필수입니다.)");
+            // 1. Check basic form inputs
+            if (!name) {
+                alert("본인의 이름(혹은 닉네임)을 입력해 주세요!");
+                return;
+            }
+
+            // 2. STAGE VALIDATION: Check if prior required steps have been submitted
+            let missingSteps = [];
+            if (!stepSubmitted.mbti) {
+                missingSteps.push("1단계 (나의 갈등 대처 MBTI 제출)");
+            }
+            if (!stepSubmitted.research) {
+                missingSteps.push("3-2단계 (인터넷 갈등 사례 조사 저장)");
+            }
+            if (!stepSubmitted.national) {
+                missingSteps.push("5단계 (대한민국 사회 갈등 유형 분석 제출)");
+            }
+
+            // If there are missing stages, prevent certificate generation
+            if (missingSteps.length > 0) {
+                let alertMsg = "⚠️ [도덕성 검증 경고]\n이전 단계 중 완수하지 않은 도덕 탐구 활동이 존재합니다.\n모든 단계를 성실히 이행해야만 명예 수료증을 발급받을 수 있습니다!\n\n[미완료 단계]\n" + missingSteps.join("\n");
+                alert(alertMsg);
+                return;
+            }
+
+            if (!promise || promise.length < 10) {
+                alert("앞으로 갈등이 발생했을 때의 평화적 대처 다짐을 최소 10자 이상 구체적으로 적어주세요!");
                 return;
             }
 
