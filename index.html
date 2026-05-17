@@ -59,11 +59,11 @@
                     <p class="text-[10px] text-slate-500 font-medium">II-2-1 갈등이란 무엇이고 어떻게 해결할까?</p>
                 </div>
             </div>
-            <!-- Expanded navigation for full width visibility in one line without wrapping -->
+            <!-- Expanded navigation for full width visibility in one line (6 STEPS) -->
             <div class="flex items-center justify-center bg-slate-100 p-1 rounded-xl w-full xl:w-auto overflow-x-auto no-scrollbar">
                 <div class="flex space-x-0.5 whitespace-nowrap min-w-max text-[11px] md:text-xs font-bold">
                     <button onclick="switchTab('tab-mbti')" id="btn-tab-mbti" class="tab-btn px-2.5 py-1.5 rounded-lg transition bg-white text-slate-900 shadow-sm">1. 갈등 MBTI</button>
-                    <button onclick="switchTab('tab-meaning')" id="btn-tab-meaning" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">2. 의미와 원인</button>
+                    <button onclick="switchTab('tab-meaning')" id="btn-tab-meaning" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">2. 갈등의 의미/원인</button>
                     <button onclick="switchTab('tab-matching')" id="btn-tab-matching" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-700">2-2. 갈등 원인 퀴즈 🎯</button>
                     <button onclick="switchTab('tab-methods')" id="btn-tab-methods" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">3. 해결의 달인</button>
                     <button onclick="switchTab('tab-research')" id="btn-tab-research" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-blue-700">3-2. 갈등 사례 조사 🔍</button>
@@ -141,7 +141,7 @@
             </div>
         </section>
 
-        <!-- STEP 2: 갈등의 의미와 원인 -->
+        <!-- STEP 2: 갈등의 의미/원인 -->
         <section id="tab-meaning" class="tab-content hidden">
             <div class="text-center mb-8">
                 <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 2. 개념 다지기</span>
@@ -747,7 +747,7 @@
                     </div>
 
                     <div>
-                        <span class="block text-xs font-bold text-slate-400 mb-1">Q3. 이 갈등을 해결하기 위해 개인(학생)과 국가(사정/제도)는 어떤 조치나 자세를 취해야 할까요?</span>
+                        <span class="block text-xs font-bold text-slate-400 mb-1">Q3. 이 갈등을 해결하기 위해 개인(학생) and 국가(사정/제도)는 어떤 조치나 자세를 취해야 할까요?</span>
                         <textarea id="nat-solution" rows="3" placeholder="예: 우리는 서로 다른 가치관을 존중하는 관용을 연습해야 하고, 국가는 고령층을 위한 디지털 문해 교육 제도를 마련해야 합니다." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs font-medium"></textarea>
                     </div>
                 </div>
@@ -977,7 +977,7 @@
             "수용형": {
                 emoji: "😇",
                 title: "수용형 (Accommodating)",
-                subtitle: "#엔젤 #착한_아이_콤플렉스",
+                subtitle: "#엔젤 #착한_아이_콤학학",
                 desc: "상대방과의 관계를 매우 중요시하여 자신의 이익이나 목표를 밀쳐 두고, 상대방의 요구와 주장을 여지없이 수용해 버리는 수동형 천사 스타일입니다."
             },
             "타협형": {
@@ -1120,6 +1120,22 @@
             setTimeout(() => {
                 toast.remove();
             }, 3000);
+        }
+
+
+        // STEP 2 Card toggle function
+        function toggleCard(elem) {
+            const detail = elem.querySelector('.card-detail');
+            const btnText = elem.querySelector('.toggle-txt'); // Targets ONLY the toggle button span
+            if (detail.classList.contains('hidden')) {
+                detail.classList.remove('hidden');
+                btnText.innerText = "상세 닫기 ▴";
+                elem.classList.add('border-brand-500', 'bg-brand-50/20');
+            } else {
+                detail.classList.add('hidden');
+                btnText.innerText = "자세히 보기 ▾";
+                elem.classList.remove('border-brand-500', 'bg-brand-50/20');
+            }
         }
 
 
@@ -1291,7 +1307,7 @@
         }
 
 
-        // STEP 3-2: 갈등 사례 인터넷 모의 조사 로직 (Upgraded as per free-text 5W1H description box)
+        // STEP 3-2: 갈등 사례 인터넷 모의 조사 로직
         function saveResearchData() {
             const causeNode = document.querySelector('input[name="research-cause"]:checked');
             const docTypeNode = document.querySelector('input[name="research-doc-type"]:checked');
@@ -1547,8 +1563,7 @@
         }
 
         // ==========================================
-        // [CRITICAL FIX] 페이지 초기 로드 일원화 실행 구문
-        // 모든 변수 및 함수 정의가 끝난 시점에 안전하게 호출합니다.
+        // 페이지 초기 로드 일원화 실행 구문
         // ==========================================
         window.onload = function() {
             loadMbtiQuestion();   // STEP 1 MBTI 자가 진단 질문지 로딩
