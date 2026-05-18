@@ -43,11 +43,38 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* 3D Flip Card Styles */
+        .flip-card {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        /* Flip Class toggled via Javascript */
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-brand-100">
 
-    <!-- Header (Optimized layout to ensure all 6 steps are visible on a single line across all devices) -->
+    <!-- Header (Optimized layout to ensure all 7 steps are visible on a single line across all devices) -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-2 flex flex-col xl:flex-row justify-between items-center xl:space-x-4 space-y-2 xl:space-y-0">
             <div class="flex items-center space-x-2 shrink-0">
@@ -59,7 +86,7 @@
                     <p class="text-[10px] text-slate-500 font-medium">II-2-1 갈등이란 무엇이고 어떻게 해결할까?</p>
                 </div>
             </div>
-            <!-- Expanded navigation for full width visibility in one line (6 STEPS) -->
+            <!-- Expanded navigation for full width visibility in one line (7 STEPS) -->
             <div class="flex items-center justify-center bg-slate-100 p-1 rounded-xl w-full xl:w-auto overflow-x-auto no-scrollbar">
                 <div class="flex space-x-0.5 whitespace-nowrap min-w-max text-[11px] md:text-xs font-bold">
                     <button onclick="switchTab('tab-mbti')" id="btn-tab-mbti" class="tab-btn px-2.5 py-1.5 rounded-lg transition bg-white text-slate-900 shadow-sm">1. 갈등 MBTI</button>
@@ -69,7 +96,8 @@
                     <button onclick="switchTab('tab-research')" id="btn-tab-research" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-blue-700">3-2. 갈등 사례 조사 🔍</button>
                     <button onclick="switchTab('tab-nimby')" id="btn-tab-nimby" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">4. 님비 vs 핌피</button>
                     <button onclick="switchTab('tab-national')" id="btn-tab-national" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-amber-700">5. 우리나라 갈등 🇰🇷</button>
-                    <button onclick="switchTab('tab-reflection')" id="btn-tab-reflection" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-600 font-black">6. 성찰 다짐 🎓</button>
+                    <button onclick="switchTab('tab-reflection')" id="btn-tab-reflection" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-brand-600 font-extrabold">6. 성찰 다짐 🎓</button>
+                    <button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn px-2.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 text-rose-600 font-black">7. 형성평가 📝</button>
                 </div>
             </div>
         </div>
@@ -565,10 +593,39 @@
 
         <!-- STEP 4: 님비(NIMBY) vs 핌피(PIMFY) 시뮬레이션 -->
         <section id="tab-nimby" class="tab-content hidden">
-            <div class="text-center mb-8">
+            <div class="text-center mb-6">
                 <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 4. 현실 사회 갈등</span>
                 <h2 class="text-3xl font-extrabold text-slate-900 mt-2">도시 계획 시뮬레이터: 내 마당은 안 돼! 🏘️</h2>
-                <p class="text-slate-500 mt-2">여러분이 시장이 되어 공공시설을 마을에 배치해 봅시다. 주민들의 극렬한 반대와 환호를 직접 겪어보세요!</p>
+                <p class="text-slate-500 text-sm mt-1">여러분이 시장이 되어 공공시설을 배치하기 전, 먼저 갈등 현상의 핵심 용어 개념을 살펴봅시다.</p>
+            </div>
+
+            <!-- Newly Added NIMBY & PIMFY Core Concepts from Supplementary Worksheet -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
+                <!-- NIMBY Card -->
+                <div class="bg-rose-50 border border-rose-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center space-x-2 text-rose-800 mb-2">
+                        <span class="text-2xl">➀</span>
+                        <h4 class="font-extrabold text-lg">님비(NIMBY) 현상</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 font-bold mb-3">"Not In My BackYard" (내 뒷마당에는 절대 안 된다! 👎)</p>
+                    <ul class="text-xs text-slate-700 space-y-2 leading-relaxed list-disc list-inside">
+                        <li><strong>뜻:</strong> 쓰레기 소각장, 화장터, 핵폐기물 처리장 등 사람들이 꺼리고 싫어하는 <span class="bg-rose-100 px-1 font-extrabold text-rose-900 rounded">혐오 시설(기피 시설)이 자기 지역에 설치되는 것을 완강히 반대</span>하는 사회적 현상입니다.</li>
+                        <li><strong>예시:</strong> 쓰레기 하수종말처리장 반대 집회, 화장터 설치 취소 요령 민원 소동 등</li>
+                    </ul>
+                </div>
+
+                <!-- PIMFY Card -->
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 shadow-sm">
+                    <div class="flex items-center space-x-2 text-emerald-800 mb-2">
+                        <span class="text-2xl">➁</span>
+                        <h4 class="font-extrabold text-lg">핌피(PIMFY) 현상</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 font-bold mb-3">"Please In My Front Yard" (내 앞마당에 제발 지어 주시오! 👍)</p>
+                    <ul class="text-xs text-slate-700 space-y-2 leading-relaxed list-disc list-inside">
+                        <li><strong>뜻:</strong> 대형 병원, 명문 학교, 고속 지하철역 등 지역 발전에 매우 긍정적이며 가치를 상승시키는 <span class="bg-emerald-100 px-1 font-extrabold text-emerald-900 rounded">선호 시설(유치 편익 시설)을 우리 동네에 이끌어오려 치열히 경쟁</span>하는 현상입니다.</li>
+                        <li><strong>예시:</strong> 수도권 KTX 전 노선 역세권 유치 경쟁, 지역 국립 대학교 유치 서명 운동 등</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Map Layout -->
@@ -676,35 +733,216 @@
             <div class="text-center mb-8">
                 <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 5. 우리 사회 들여다보기</span>
                 <h2 class="text-3xl font-extrabold text-slate-900 mt-2">대한민국 사회 갈등 유형 분석실 🇰🇷</h2>
-                <p class="text-slate-500 mt-2">오늘날 우리 사회를 혼란스럽게 만드는 5가지 핵심 집단 갈등의 성격을 이해해 봅시다.</p>
+                <p class="text-slate-500 mt-2 text-sm">플래시 카드를 뒤집어 갈등의 성격을 보고, 키워드를 클릭해 직접 탐구해 보세요! (클릭 시 새 탭에서 검색 연동 🔍)</p>
             </div>
 
-            <!-- Conflict grid directory -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
-                    <span class="text-3xl">🗳️</span>
-                    <h4 class="font-bold text-slate-800 mt-2 text-sm">이념 갈등</h4>
-                    <p class="text-slate-500 text-[11px] mt-1">복지, 안보, 대북정책 등을 두고 정치 집단이나 시민들이 대립하는 경우</p>
+            <!-- 5D Interactive 3D Flip Flash Cards (Fixed Toggle Back Issue) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                
+                <!-- Card 1: 이념 갈등 -->
+                <div id="card-concept-1" class="flip-card w-full h-48 cursor-pointer group" onclick="toggleFlip('card-concept-1')">
+                    <div class="flip-card-inner">
+                        <!-- Front Face -->
+                        <div class="flip-card-front bg-gradient-to-br from-rose-500 to-rose-600 text-white p-4 flex flex-col justify-between shadow-md">
+                            <span class="text-3xl">🗳️</span>
+                            <div>
+                                <h4 class="font-black text-lg">이념 갈등</h4>
+                                <p class="text-[10px] text-rose-200 mt-1">사회를 바라보는 눈 🔄</p>
+                            </div>
+                        </div>
+                        <!-- Back Face -->
+                        <div class="flip-card-back bg-white border border-rose-200 p-4 flex flex-col justify-between text-left">
+                            <div class="text-slate-700">
+                                <span class="text-[10px] font-bold text-rose-600 block uppercase">이념 갈등의 성격</span>
+                                <p class="text-xs leading-normal font-medium mt-1">정치나 사회를 바라보는 생각이 달라서 생기는 갈등</p>
+                            </div>
+                            <div class="border-t pt-1.5 text-[10px]">
+                                <span class="font-bold text-rose-700 block mb-1">🔍 대표 예시:</span>
+                                <p class="text-slate-500">대북 정책, 보편적 복지 vs 선택적 복지 제도 대립 등</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
-                    <span class="text-3xl">🗺️</span>
-                    <h4 class="font-bold text-slate-800 mt-2 text-sm">지역 갈등</h4>
-                    <p class="text-slate-500 text-[11px] mt-1">수도권과 비수도권의 균형 발전 및 지역 발전을 둘러싼 이익 충돌</p>
+
+                <!-- Card 2: 지역 갈등 -->
+                <div id="card-concept-2" class="flip-card w-full h-48 cursor-pointer group" onclick="toggleFlip('card-concept-2')">
+                    <div class="flip-card-inner">
+                        <!-- Front Face -->
+                        <div class="flip-card-front bg-gradient-to-br from-sky-500 to-sky-600 text-white p-4 flex flex-col justify-between shadow-md">
+                            <span class="text-3xl">🗺️</span>
+                            <div>
+                                <h4 class="font-black text-lg">지역 갈등</h4>
+                                <p class="text-[10px] text-sky-200 mt-1">공간과 이익의 균형 🔄</p>
+                            </div>
+                        </div>
+                        <!-- Back Face -->
+                        <div class="flip-card-back bg-white border border-sky-200 p-4 flex flex-col justify-between text-left">
+                            <div class="text-slate-700">
+                                <span class="text-[10px] font-bold text-sky-600 block uppercase">지역 갈등의 성격</span>
+                                <p class="text-xs leading-normal font-medium mt-1">지역 간 발전 정도나 이익 차이 때문에 생기는 갈등</p>
+                            </div>
+                            <div class="border-t pt-1.5 text-[10px]">
+                                <span class="font-bold text-sky-700 block mb-1">🔍 대표 예시:</span>
+                                <p class="text-slate-500">수도권 집중 개발 문제, 지방 분권 vs 수도권 규제 완화 분쟁</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
-                    <span class="text-3xl">🚻</span>
-                    <h4 class="font-bold text-slate-800 mt-2 text-sm">남녀 갈등</h4>
-                    <p class="text-slate-500 text-[11px] mt-1">성별에 따른 사회적 역할, 군 징병제, 유리천장, 가사 노동 등의 권리 대립</p>
+
+                <!-- Card 3: 남녀 갈등 -->
+                <div id="card-concept-3" class="flip-card w-full h-48 cursor-pointer group" onclick="toggleFlip('card-concept-3')">
+                    <div class="flip-card-inner">
+                        <!-- Front Face -->
+                        <div class="flip-card-front bg-gradient-to-br from-purple-500 to-purple-600 text-white p-4 flex flex-col justify-between shadow-md">
+                            <span class="text-3xl">🚻</span>
+                            <div>
+                                <h4 class="font-black text-lg">남녀 갈등</h4>
+                                <p class="text-[10px] text-purple-200 mt-1">성별과 권리의 조화 🔄</p>
+                            </div>
+                        </div>
+                        <!-- Back Face (Fixed Click Bubbling using stopPropagation correctly only on buttons) -->
+                        <div class="flip-card-back bg-white border border-purple-200 p-4 flex flex-col justify-between text-left">
+                            <div class="text-slate-700">
+                                <span class="text-[10px] font-bold text-purple-600 block uppercase">남녀 갈등의 성격</span>
+                                <p class="text-xs leading-normal font-medium mt-1">성별에 따라 역할, 권리, 대우 문제로 생기는 갈등</p>
+                            </div>
+                            <div class="border-t pt-1.5 text-[10px]">
+                                <span class="font-bold text-purple-700 block mb-1">🔍 키워드 탐구 (클릭!):</span>
+                                <div class="flex flex-wrap gap-1 mt-1">
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('군 징병 갈등')" class="px-1.5 py-0.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded border border-purple-100 text-[10px] font-bold transition">#군 징병</button>
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('유리천장 문제')" class="px-1.5 py-0.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded border border-purple-100 text-[10px] font-bold transition">#유리천장</button>
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('가사노동 분담 갈등')" class="px-1.5 py-0.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded border border-purple-100 text-[10px] font-bold transition">#가사노동</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
-                    <span class="text-3xl">👴🏽👧🏻</span>
-                    <h4 class="font-bold text-slate-800 mt-2 text-sm">세대 갈등</h4>
-                    <p class="text-slate-500 text-[11px] mt-1">디지털 격차(키오스크), 은어 사용, 청년-기성세대 간 가치관 분쟁</p>
+
+                <!-- Card 4: 세대 갈등 -->
+                <div id="card-concept-4" class="flip-card w-full h-48 cursor-pointer group" onclick="toggleFlip('card-concept-4')">
+                    <div class="flip-card-inner">
+                        <!-- Front Face -->
+                        <div class="flip-card-front bg-gradient-to-br from-teal-500 to-teal-600 text-white p-4 flex flex-col justify-between shadow-md">
+                            <span class="text-3xl">👴🏽👧🏻</span>
+                            <div>
+                                <h4 class="font-black text-lg">세대 갈등</h4>
+                                <p class="text-[10px] text-teal-200 mt-1">연령대별 가치관 차이 🔄</p>
+                            </div>
+                        </div>
+                        <!-- Back Face -->
+                        <div class="flip-card-back bg-white border border-teal-200 p-4 flex flex-col justify-between text-left">
+                            <div class="text-slate-700">
+                                <span class="text-[10px] font-bold text-teal-600 block uppercase">세대 갈등의 성격</span>
+                                <p class="text-xs leading-normal font-medium mt-1">연령 집단(청소년, 청년, 노년 등) 간의 경험 차이 갈등</p>
+                            </div>
+                            <div class="border-t pt-1.5 text-[10px]">
+                                <span class="font-bold text-teal-700 block mb-1">🔍 키워드 탐구 (클릭!):</span>
+                                <div class="flex flex-wrap gap-1 mt-1">
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('고령층 키오스크 소외 갈등')" class="px-1.5 py-0.5 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded border border-teal-100 text-[10px] font-bold transition">#키오스크</button>
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('청소년 은어 비속어 분쟁')" class="px-1.5 py-0.5 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded border border-teal-100 text-[10px] font-bold transition">#은어 사용</button>
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('세대 간 문화 경험 격차')" class="px-1.5 py-0.5 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded border border-teal-100 text-[10px] font-bold transition font-medium">#세대 격차</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
-                    <span class="text-3xl">💼</span>
-                    <h4 class="font-bold text-slate-800 mt-2 text-sm">계층 갈등</h4>
-                    <p class="text-slate-500 text-[11px] mt-1">노동자와 기업 간 노사 관계, 세금 복지 정책, 빈부 격차로 인한 대립</p>
+
+                <!-- Card 5: 계층 갈등 -->
+                <div id="card-concept-5" class="flip-card w-full h-48 cursor-pointer group" onclick="toggleFlip('card-concept-5')">
+                    <div class="flip-card-inner">
+                        <!-- Front Face -->
+                        <div class="flip-card-front bg-gradient-to-br from-indigo-500 to-indigo-600 text-white p-4 flex flex-col justify-between shadow-md">
+                            <span class="text-3xl">💼</span>
+                            <div>
+                                <h4 class="font-black text-lg">계층 갈등</h4>
+                                <p class="text-[10px] text-indigo-200 mt-1">빈부와 소득 기회의 격차 🔄</p>
+                            </div>
+                        </div>
+                        <!-- Back Face -->
+                        <div class="flip-card-back bg-white border border-indigo-200 p-4 flex flex-col justify-between text-left">
+                            <div class="text-slate-700">
+                                <span class="text-[10px] font-bold text-indigo-600 block uppercase">계층 갈등의 성격</span>
+                                <p class="text-xs leading-normal font-medium mt-1">소득, 직업, 교육 수준 등에 의해 사회적 계층이 부딪히는 갈등</p>
+                            </div>
+                            <div class="border-t pt-1.5 text-[10px]">
+                                <span class="font-bold text-indigo-700 block mb-1">🔍 키워드 탐구 (클릭!):</span>
+                                <div class="flex flex-wrap gap-1 mt-1 font-medium">
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('노사 관계 노조 노동자 기업 갈등')" class="px-1.5 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded border border-indigo-100 text-[10.5px] font-bold transition">#노동자-기업</button>
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('청년 취업 기성세대 연금 기금 분쟁')" class="px-1.5 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded border border-indigo-100 text-[10.5px] font-bold transition">#청년-기성세대</button>
+                                    <button onclick="event.stopPropagation(); handleKeywordClick('부유세 증세 세금 복지 정책 논쟁')" class="px-1.5 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded border border-indigo-100 text-[10.5px] font-bold transition">#세금 정책</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 예시와 유형 연결하기 매칭 게임 액티비티 -->
+            <div class="bg-white border border-slate-100 shadow-md rounded-2xl p-6 mb-8 max-w-4xl mx-auto">
+                <h3 class="text-lg font-extrabold text-slate-900 border-b pb-3 mb-4 flex items-center justify-between">
+                    <span class="flex items-center"><span class="text-xl mr-1.5">🎯</span> 대한민국 사회 갈등 연결 챌린지!</span>
+                    <span id="matching-score-badge" class="px-2.5 py-1 bg-amber-50 text-amber-700 text-xs rounded-full font-black">매칭: 0 / 5</span>
+                </h3>
+                <p class="text-xs text-slate-500 leading-normal mb-6">
+                    왼쪽의 실제 사례 카드를 클릭한 뒤, 오른쪽에 매치되는 올바른 사회적 갈등 유형 카드를 탭하여 선으로 연결해 보세요!
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left: Scenarios / Examples -->
+                    <div class="space-y-2.5">
+                        <span class="block text-xs font-bold text-slate-400">📄 실제 일어난 분쟁 예시 카드</span>
+                        <div id="nat-match-examples" class="space-y-2">
+                            <div onclick="selectNationalMatch('scene-a', '이념 갈등')" class="nat-match-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-amber-300 rounded-xl cursor-pointer transition text-xs font-semibold leading-relaxed text-slate-700" id="nat-scene-a">
+                                "비무장지대 대북 평화 통일 협력 지원 방안과 유관 국방 군사 훈련 강화 정책을 둘러싼 여야 정치 단체와 지지 시민들의 사설 공방"
+                            </div>
+                            <div onclick="selectNationalMatch('scene-b', '지역 갈등')" class="nat-match-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-amber-300 rounded-xl cursor-pointer transition text-xs font-semibold leading-relaxed text-slate-700" id="nat-scene-b">
+                                "수도권 집중 개발 특혜 의혹을 주장하며 지방 신도시 균형 발전 및 토지 개발 보상 규제 완화 입법을 촉구하는 지자체 간 충돌"
+                            </div>
+                            <div onclick="selectNationalMatch('scene-c', '남녀 갈등')" class="nat-match-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-amber-300 rounded-xl cursor-pointer transition text-xs font-semibold leading-relaxed text-slate-700" id="nat-scene-c">
+                                "모 성별 전용 징병 안건 의무화 및 직장 승진 차별을 유발하는 고질적 유리천장 관행 해소를 위한 시위 공방"
+                            </div>
+                            <div onclick="selectNationalMatch('scene-d', '세대 갈등')" class="nat-match-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-amber-300 rounded-xl cursor-pointer transition text-xs font-semibold leading-relaxed text-slate-700" id="nat-scene-d">
+                                "식당 내 디지털 무인 주문용 터치식 키오스크 보급 증가에 따른 노령층 소외 문제와 청소년들의 한글 은어 사용 격차 다툼"
+                            </div>
+                            <div onclick="selectNationalMatch('scene-e', '계층 갈등')" class="nat-match-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-amber-300 rounded-xl cursor-pointer transition text-xs font-semibold leading-relaxed text-slate-700" id="nat-scene-e">
+                                "비정규직 노조원 임금 인상 요구 파업에 따른 대기업 사측의 손실 배상 소송 분쟁 및 복지 재원 확보용 세금 규제 대립"
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Conflict Types -->
+                    <div class="space-y-2.5">
+                        <span class="block text-xs font-bold text-slate-400">📥 알맞은 갈등의 유형 카드</span>
+                        <div id="nat-match-types" class="space-y-2">
+                            <!-- Scrambled types -->
+                            <div onclick="clickNationalType('지역 갈등')" class="nat-type-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-brand-300 rounded-xl cursor-pointer transition text-xs font-extrabold text-slate-700 flex justify-between items-center" id="nat-type-지역">
+                                <span>🗺️ 지역 갈등</span>
+                                <span class="badge text-[9px] px-1.5 py-0.5 bg-slate-200 text-slate-500 rounded">대기 중</span>
+                            </div>
+                            <div onclick="clickNationalType('세대 갈등')" class="nat-type-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-brand-300 rounded-xl cursor-pointer transition text-xs font-extrabold text-slate-700 flex justify-between items-center" id="nat-type-세대">
+                                <span>👴🏽 세대 갈등</span>
+                                <span class="badge text-[9px] px-1.5 py-0.5 bg-slate-200 text-slate-500 rounded">대기 중</span>
+                            </div>
+                            <div onclick="clickNationalType('이념 갈등')" class="nat-type-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-brand-300 rounded-xl cursor-pointer transition text-xs font-extrabold text-slate-700 flex justify-between items-center" id="nat-type-이념">
+                                <span>🗳️ 이념 갈등</span>
+                                <span class="badge text-[9px] px-1.5 py-0.5 bg-slate-200 text-slate-500 rounded">대기 중</span>
+                            </div>
+                            <div onclick="clickNationalType('계층 갈등')" class="nat-type-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-brand-300 rounded-xl cursor-pointer transition text-xs font-extrabold text-slate-700 flex justify-between items-center" id="nat-type-계층">
+                                <span>💼 계층 갈등</span>
+                                <span class="badge text-[9px] px-1.5 py-0.5 bg-slate-200 text-slate-500 rounded">대기 중</span>
+                            </div>
+                            <div onclick="clickNationalType('남녀 갈등')" class="nat-type-card p-3 bg-slate-50 border-2 border-slate-100 hover:border-brand-300 rounded-xl cursor-pointer transition text-xs font-extrabold text-slate-700 flex justify-between items-center" id="nat-type-남녀">
+                                <span>🚻 남녀 갈등</span>
+                                <span class="badge text-[9px] px-1.5 py-0.5 bg-slate-200 text-slate-500 rounded">대기 중</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Match banner -->
+                <div id="nat-match-success" class="hidden mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-center text-xs font-black animate-bounce">
+                    🎉 축하합니다! 대한민국 사회에 얽힌 복잡한 갈등 상황과 유형 지도를 완벽하게 연결하셨습니다!
                 </div>
             </div>
 
@@ -767,7 +1005,7 @@
             </div>
         </section>
 
-        <!-- STEP 6: 성찰 및 다짐 보드 (Upgraded to Step 6) -->
+        <!-- STEP 6: 성찰 및 다짐 보드 -->
         <section id="tab-reflection" class="tab-content hidden">
             <div class="text-center mb-8">
                 <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 6. 수업의 완성</span>
@@ -855,6 +1093,40 @@
             </div>
         </section>
 
+        <!-- [NEW STEP 7]: 형성평가 젭퀴즈 보드 -->
+        <section id="tab-quiz" class="tab-content hidden">
+            <div class="text-center mb-8">
+                <span class="px-3 py-1 bg-rose-100 text-rose-800 text-xs font-semibold rounded-full uppercase tracking-wider">STEP 7. 단원 마무리</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">생생 형성평가: ZEP 퀴즈 배틀! 📝🎈</h2>
+                <p class="text-slate-500 mt-2">친구들과 메타버스 공간에서 퀴즈 경쟁을 펼치고 단원을 마스터해 봅시다!</p>
+            </div>
+
+            <div class="max-w-xl mx-auto bg-white border border-slate-100 shadow-md rounded-2xl p-6 text-center space-y-6">
+                <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl inline-block">
+                    <span class="text-3xl">🎮</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">젭퀴즈(ZEP Quiz) 입장관</h3>
+                <p class="text-xs text-slate-500 leading-relaxed px-4">
+                    아래 버튼 중 원하는 단원을 선택하여 배틀 맵으로 이동하세요. <br>
+                    <strong>2-1 버튼</strong>을 누르면 의리T가 구성한 메타버스 형성평가 방으로 즉각 연결됩니다.
+                </p>
+
+                <!-- Custom requested button layout and link redirection -->
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <button onclick="window.open('https://quiz.zep.us/play/lpeqMR', '_blank')" class="p-4 bg-gradient-to-br from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-extrabold rounded-2xl shadow-md shadow-rose-100 transition active:scale-[0.98] text-sm">
+                        🔥 2-1 단원 젭퀴즈 풀기
+                    </button>
+                    <button onclick="alert('✏️ 2-2 단원 젭퀴즈 맵은 현재 오픈 준비 중입니다. 의리T와 함께 다음 시간에 도전해요!')" class="p-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-extrabold rounded-2xl transition active:scale-[0.98] text-sm">
+                        🔒 2-2 단원 젭퀴즈 풀기
+                    </button>
+                </div>
+                
+                <div class="pt-4 border-t text-[11px] text-slate-400">
+                    * ZEP 플레이 시 크롬 브라우저 사용을 권장합니다.
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
@@ -866,11 +1138,12 @@
             </div>
             <div class="flex space-x-4">
                 <span class="hover:underline cursor-pointer" onclick="switchTab('tab-mbti')">갈등 MBTI</span>
-                <span class="hover:underline cursor-pointer" onclick="switchTab('tab-meaning')">갈등 원인</span>
+                <span class="hover:underline cursor-pointer" onclick="switchTab('tab-meaning')">갈등의 의미/원인</span>
                 <span class="hover:underline cursor-pointer" onclick="switchTab('tab-matching')">갈등 매칭</span>
                 <span class="hover:underline cursor-pointer" onclick="switchTab('tab-methods')">해결의 달인</span>
                 <span class="hover:underline cursor-pointer" onclick="switchTab('tab-research')">갈등 연구</span>
                 <span class="hover:underline cursor-pointer" onclick="switchTab('tab-nimby')">님비&핌피 시뮬레이터</span>
+                <span class="hover:underline cursor-pointer" onclick="switchTab('tab-quiz')">형성평가</span>
             </div>
         </div>
     </footer>
@@ -972,12 +1245,12 @@
                 emoji: "🦁",
                 title: "경쟁형 (Competitive)",
                 subtitle: "#승부사 #내_말이_무조건_맞아",
-                desc: "자신의 가치관과 생각을 고집하며, 상대방을 굴복시키고 이기려는 경향이 강해요. 내 자존심이나 단기적 목표는 지키지만 소중한 친구와의 인간관계나 신뢰가 박살날 수도 있으니 주의하세요!"
+                desc: "자신의 가치관과 생각을 고집하며, 상대방을 굴복시키고 이기려는 경향이 강해요. 내 자존심이나 단기적 목표는 지키지만 소중한 친구와의 관계가 훼손될 수 있으니 피해야 합니다."
             },
             "수용형": {
                 emoji: "😇",
                 title: "수용형 (Accommodating)",
-                subtitle: "#엔젤 #착한_아이_콤학학",
+                subtitle: "#엔젤 #착한_아이_콤플렉스",
                 desc: "상대방과의 관계를 매우 중요시하여 자신의 이익이나 목표를 밀쳐 두고, 상대방의 요구와 주장을 여지없이 수용해 버리는 수동형 천사 스타일입니다."
             },
             "타협형": {
@@ -1307,7 +1580,7 @@
         }
 
 
-        // STEP 3-2: 갈등 사례 인터넷 모의 조사 로직
+        // STEP 3-2: 갈등 사례 인터넷 모의 조사 로직 (Fixed submission verification issue)
         function saveResearchData() {
             const causeNode = document.querySelector('input[name="research-cause"]:checked');
             const docTypeNode = document.querySelector('input[name="research-doc-type"]:checked');
@@ -1356,7 +1629,7 @@
             `;
             summaryDisplay.className = "text-xs text-slate-700 mt-1";
 
-            // Mark step as submitted
+            // Mark step as submitted (Set exact verification states)
             stepSubmitted.research = true;
             
             // Visual success indicator
@@ -1370,13 +1643,119 @@
         }
 
 
-        // STEP 5: 우리나라 사회 갈등 유형 탐색 데이터 처리 로직
+        // STEP 5: 우리나라 사회 갈등 유형 탐색 데이터 처리 로직 & 연결 게임 로직
         let submittedNationalConflict = "";
+        let activeNatExampleId = null;
+        let activeNatExpectedCause = null;
+        let matchedNationalCount = 0;
+        let nationalMatchedStates = {
+            'scene-a': false,
+            'scene-b': false,
+            'scene-c': false,
+            'scene-d': false,
+            'scene-e': false
+        };
+
+        // Live Educational Search Redirection on keyword click
+        function handleKeywordClick(keyword) {
+            alert(`🔍 의리T의 백과사전 조사실: '${keyword}' 관련 심화 보도자료를 브라우저 새 창에서 검색합니다.`);
+            const encoded = encodeURIComponent(keyword);
+            window.open(`https://search.naver.com/search.naver?query=${encoded}`, '_blank');
+        }
+
+        // Optimized Toggle flip to prevent block of re-clicking
+        function toggleFlip(cardId) {
+            const card = document.getElementById(cardId);
+            card.classList.toggle('flipped');
+        }
+
+        // Matching interaction: Select Example (Left)
+        function selectNationalMatch(cardId, expectedCause) {
+            // Remove border highlight from all left cards
+            document.querySelectorAll('.nat-match-card').forEach(card => {
+                card.classList.remove('border-amber-500', 'bg-amber-50/20');
+            });
+
+            // Highlight selected card
+            const element = document.getElementById('nat-' + cardId);
+            element.classList.add('border-amber-500', 'bg-amber-50/20');
+
+            activeNatExampleId = cardId;
+            activeNatExpectedCause = expectedCause;
+        }
+
+        // Matching interaction: Click Type (Right)
+        function clickNationalType(typeText) {
+            if (!activeNatExampleId || !activeNatExpectedCause) {
+                alert("먼저 왼쪽 목록에서 분석하고 싶은 '실제 분쟁 예시 카드'를 클릭해 주세요!");
+                return;
+            }
+
+            const leftElement = document.getElementById('nat-' + activeNatExampleId);
+            let rightElementId = "";
+            if (typeText === "이념 갈등") rightElementId = "nat-type-이념";
+            else if (typeText === "지역 갈등") rightElementId = "nat-type-지역";
+            else if (typeText === "남녀 갈등") rightElementId = "nat-type-남녀";
+            else if (typeText === "세대 갈등") rightElementId = "nat-type-세대";
+            else if (typeText === "계층 갈등") rightElementId = "nat-type-계층";
+
+            const rightElement = document.getElementById(rightElementId);
+
+            if (activeNatExpectedCause === typeText) {
+                // CORRECT MATCH!
+                matchedNationalCount++;
+                nationalMatchedStates[activeNatExampleId] = true;
+
+                // Disable and style left element
+                leftElement.classList.remove('border-amber-500', 'bg-amber-50/20');
+                leftElement.classList.add('opacity-40', 'pointer-events-none', 'bg-slate-100', 'border-slate-300');
+                leftElement.onclick = null;
+
+                // Disable and style right element
+                rightElement.classList.remove('hover:border-brand-300', 'bg-slate-50');
+                rightElement.classList.add('opacity-40', 'pointer-events-none', 'bg-emerald-50', 'border-emerald-300', 'text-emerald-800');
+                rightElement.onclick = null;
+                rightElement.querySelector('.badge').innerText = "매칭 완료 ✓";
+                rightElement.querySelector('.badge').className = "badge text-[9px] px-1.5 py-0.5 bg-emerald-500 text-white rounded font-black";
+
+                // Update score badge
+                document.getElementById('matching-score-badge').innerText = `매칭: ${matchedNationalCount} / 5`;
+
+                // Toast success
+                const toast = document.createElement('div');
+                toast.className = "fixed bottom-5 right-5 bg-brand-600 text-white px-4 py-2 rounded-xl shadow-lg font-bold text-xs z-50 flex items-center space-x-1.5";
+                toast.innerHTML = `<span>🎯</span> <span>정확한 연결입니다! (${typeText})</span>`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 1500);
+
+                // Check all matched
+                if (matchedNationalCount === 5) {
+                    document.getElementById('nat-match-success').classList.remove('hidden');
+                }
+
+                // Reset selection
+                activeNatExampleId = null;
+                activeNatExpectedCause = null;
+            } else {
+                // WRONG MATCH
+                const toast = document.createElement('div');
+                toast.className = "fixed bottom-5 right-5 bg-rose-600 text-white px-4 py-2 rounded-xl shadow-lg font-bold text-xs z-50 flex items-center space-x-1.5";
+                toast.innerHTML = `<span>❌</span> <span>틀렸습니다! 다른 원인 유형을 검토해 보세요.</span>`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 2000);
+            }
+        }
+
+        // Fixed submission validation state triggers
         function saveNationalConflict() {
             const natConflictNode = document.querySelector('input[name="nat-conflict"]:checked');
             const reason = document.getElementById('nat-reason').value.trim();
             const solution = document.getElementById('nat-solution').value.trim();
 
+            if (matchedNationalCount < 5) {
+                alert("⚠️ [학습 미달 경고]\n먼저 상단의 '대한민국 사회 갈등 연결 챌린지 게임' 5문제를 모두 성공적으로 이어주셔야 의견 제출이 가능합니다!");
+                return;
+            }
             if (!natConflictNode) {
                 alert("우리나라 갈등 유형 중 가장 심각하다고 판단한 유형을 1가지 라디오 단추로 골라주세요!");
                 return;
@@ -1542,7 +1921,7 @@
                 <strong class="text-slate-900 font-bold">II-2-1 갈등의 의미 및 해결 방법</strong>을 훌륭히 마스터하고,<br>
                 자가 도덕 테스트를 통해 <strong>${mbtiText}</strong>을 바르게 성찰하는 한편,<br>
                 현실적 <strong>${causeConcept}</strong> 자료 분석 및 <strong>${natConceptText}</strong> 과정을 훌륭히 성공시켰으며,<br>
-                스스로 그 평화적 조율 카드로 <strong>${resolveConcept}</strong> 방식을 바르게 선택했습니다.<br>
+                스스로 그 평화적 조율 카드로 <strong>${resolveConcept}</strong> 방식들을 바르게 선택하여 수립했습니다.<br>
                 앞으로 삶 속에서 소중한 사람들과 <span class="bg-amber-100 px-1 font-bold text-amber-900">역지사지</span>와 <span class="bg-amber-100 px-1 font-bold text-amber-900">관용</span>을 평화롭게 실천할 것을 엄숙히 약속하였기에 이 수료증을 수여합니다.
             `;
 
