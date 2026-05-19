@@ -94,10 +94,10 @@
 
                 <!-- User Auth Area -->
                 <div id="auth-container" class="flex items-center space-x-2">
-                    <button id="admin-menu-btn" onclick="openAdminModal()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-md flex items-center gap-1.5 animate-pulse">
+                    <button id="admin-menu-btn" onclick="openAdminModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-md flex items-center gap-1.5 animate-pulse" style="display: none;">
                         <i class="fa-solid fa-toolbox"></i> <span>관리 메뉴</span>
                     </button>
-                    <span id="user-role-badge" class="hidden text-xs font-bold px-2.5 py-1.5 rounded-xl border"></span>
+                    <span id="user-role-badge" class="text-xs font-bold px-2.5 py-1.5 rounded-xl border" style="display: none;"></span>
                     <button id="auth-btn" onclick="toggleAuth()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5">
                         <i id="auth-icon" class="fa-solid fa-right-to-bracket"></i> <span id="auth-text">로그인</span>
                     </button>
@@ -1271,7 +1271,48 @@
                         // 로그인 성공 및 세션 보존 시: role 조회 단계로 이동
                         userId = user.uid;
                         console.log("Authenticated with user identity: " + userId);
-                        await lookupUserRoleAndProfile(userId);
+                        
+                        // Firestore를 직접 조회하여 유저 역할 및 정보를 매핑함 (보안은 Database Rules가 핵심임)
+                        try {
+                            const profileDocRef = doc(db, 'artifacts', appId, 'users', userId, 'profile', 'info');
+                            const docSnap = await getDoc(profileDocRef);
+
+                            if (docSnap.exists()) {
+                                const data = docSnap.data();
+                                currentUser = {
+                                    name: data.name,
+                                    role: data.role || 'student'
+                                };
+                                localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
+                            } else {
+                                // 데이터베이스가 비어있을 경우 임시 보존 처리
+                                const savedUser = localStorage.getItem('ethicsUser');
+                                if (savedUser) {
+                                    currentUser = JSON.parse(savedUser);
+                                    await setDoc(profileDocRef, {
+                                        name: currentUser.name,
+                                        role: currentUser.role,
+                                        updatedAt: new Date().toISOString()
+                                    });
+                                } else {
+                                    currentUser = null;
+                                }
+                            }
+                        } catch (err) {
+                            console.warn("Profile fetch failed, using local fallback:", err);
+                            const savedUser = localStorage.getItem('ethicsUser');
+                            if (savedUser) {
+                                currentUser = JSON.parse(savedUser);
+                            } else {
+                                currentUser = null;
+                            }
+                        }
+
+                        // UI 갱신 및 데이터 동기화 파이프라인 진행
+                        updateAuthUI();
+                        setupRealtimeDiscussion();
+                        setupRealtimeAnnouncement();
+                        loadChecklistFromDatabase();
                     }
                 });
             } catch (err) {
@@ -1281,54 +1322,49 @@
             }
         }
 
-        // Firestore 및 로컬 캐시를 대조하여 사용자 역할 및 프로필 정보 조회 단계 수행
-        async function lookupUserRoleAndProfile(uid) {
-            if (!db) return;
-            try {
-                // RULE 1: 사용자 고유 프라이빗 경로 탐색
-                const profileDocRef = doc(db, 'artifacts', appId, 'users', uid, 'profile', 'info');
-                const docSnap = await getDoc(profileDocRef);
+        // UI 갱신 및 관리 버튼 보여주기/숨기기 제어
+        function updateAuthUI() {
+            const authBtn = document.getElementById('auth-btn');
+            const authIcon = document.getElementById('auth-icon');
+            const authText = document.getElementById('auth-text');
+            const roleBadge = document.getElementById('user-role-badge');
+            const adminMenuBtn = document.getElementById('admin-menu-btn');
 
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    currentUser = {
-                        name: data.name,
-                        role: data.role || 'student'
-                    };
-                    localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
-                    console.log("Firestore profile synchronized successfully:", currentUser);
+            if (currentUser) {
+                authBtn.className = "bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5";
+                authIcon.className = "fa-solid fa-right-from-bracket";
+                authText.innerText = "로그아웃";
+
+                roleBadge.style.display = "flex";
+                
+                // role 감지 분기
+                if (currentUser.role === 'admin') {
+                    // admin이면: 관리자 전용 버튼 display: flex
+                    adminMenuBtn.style.display = "flex";
+                    roleBadge.className = "text-xs font-extrabold px-2.5 py-1.5 rounded-xl border bg-indigo-50 text-indigo-700 border-indigo-200 flex items-center gap-1";
+                    roleBadge.innerHTML = `<i class="fa-solid fa-user-shield"></i> 관리자: ${currentUser.name}`;
                 } else {
-                    // 데이터베이스에 유저 프로필이 없을 경우 로컬 캐시 조회 시도
-                    const savedUser = localStorage.getItem('ethicsUser');
-                    if (savedUser) {
-                        currentUser = JSON.parse(savedUser);
-                        await syncProfileToDatabase(); // 유저 데이터를 DB와 원격 동기화
-                    } else {
-                        currentUser = null;
-                    }
+                    // student면: 관리자 전용 버튼 display: none
+                    adminMenuBtn.style.display = "none";
+                    roleBadge.className = "text-xs font-extrabold px-2.5 py-1.5 rounded-xl border bg-emerald-50 text-emerald-700 border-emerald-200 flex items-center gap-1";
+                    roleBadge.innerHTML = `<i class="fa-solid fa-graduation-cap"></i> 학생: ${currentUser.name}`;
                 }
-            } catch (err) {
-                console.warn("Profile database lookup failed, falling back to local cache:", err);
-                const savedUser = localStorage.getItem('ethicsUser');
-                if (savedUser) {
-                    currentUser = JSON.parse(savedUser);
-                } else {
-                    currentUser = null;
-                }
+                roleBadge.title = "User ID: " + userId;
+            } else {
+                // 비로그인이면: 역할 배지 및 관리자 메뉴 숨기고 로그인 버튼만 유지
+                authBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5";
+                authIcon.className = "fa-solid fa-right-to-bracket";
+                authText.innerText = "로그인";
+                
+                roleBadge.style.display = "none";
+                adminMenuBtn.style.display = "none";
             }
-
-            // UI 갱신 및 실시간 스트림 파이프라인 개시
-            updateAuthUI();
-            setupRealtimeDiscussion();
-            setupRealtimeAnnouncement();
-            loadChecklistFromDatabase();
         }
 
         // Setup Firestore profiles
         async function syncProfileToDatabase() {
             if (!userId || !db || !currentUser) return;
             try {
-                // RULE 1: Use private document path
                 const profileDocRef = doc(db, 'artifacts', appId, 'users', userId, 'profile', 'info');
                 await setDoc(profileDocRef, {
                     name: currentUser.name,
@@ -1408,40 +1444,6 @@
                 await syncProfileToDatabase();
             }
             updateAuthUI();
-        }
-
-        function updateAuthUI() {
-            const authBtn = document.getElementById('auth-btn');
-            const authIcon = document.getElementById('auth-icon');
-            const authText = document.getElementById('auth-text');
-            const roleBadge = document.getElementById('user-role-badge');
-            const adminMenuBtn = document.getElementById('admin-menu-btn');
-
-            if (currentUser) {
-                authBtn.className = "bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5";
-                authIcon.className = "fa-solid fa-right-from-bracket";
-                authText.innerText = "로그아웃";
-
-                roleBadge.classList.remove('hidden');
-                
-                if (currentUser.role === 'student') {
-                    roleBadge.className = "text-xs font-extrabold px-2.5 py-1.5 rounded-xl border bg-emerald-50 text-emerald-700 border-emerald-200 flex items-center gap-1";
-                    roleBadge.innerHTML = `<i class="fa-solid fa-graduation-cap"></i> 학생: ${currentUser.name}`;
-                    roleBadge.title = "User ID: " + userId;
-                    adminMenuBtn.classList.add('hidden');
-                } else {
-                    roleBadge.className = "text-xs font-extrabold px-2.5 py-1.5 rounded-xl border bg-indigo-50 text-indigo-700 border-indigo-200 flex items-center gap-1";
-                    roleBadge.innerHTML = `<i class="fa-solid fa-user-shield"></i> 관리자: ${currentUser.name}`;
-                    roleBadge.title = "User ID: " + userId;
-                    adminMenuBtn.classList.remove('hidden');
-                }
-            } else {
-                authBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5";
-                authIcon.className = "fa-solid fa-right-to-bracket";
-                authText.innerText = "로그인";
-                roleBadge.classList.add('hidden');
-                adminMenuBtn.classList.add('hidden');
-            }
         }
 
         // --- ADMIN MODULE CONTROLS (Firestore Integration) ---
