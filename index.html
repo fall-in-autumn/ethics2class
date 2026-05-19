@@ -36,6 +36,14 @@
             pointer-events: none;
             z-index: 100;
         }
+        /* Custom Fade-in Animation for Modals & Interactive Elements */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-slate-800">
@@ -45,7 +53,7 @@
     <!-- Top Banner & Notification Bar -->
     <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-xs md:text-sm py-2 px-4 text-center font-medium shadow-inner relative overflow-hidden">
         <span class="inline-block animate-pulse mr-2">📢</span> 
-        [공지] 이번 주 수행평가 '나만의 도덕적 신조 만들기' 마감 기한을 확인하세요!
+        <span id="top-banner-text">[공지] 이번 주 수행평가 '나만의 도덕적 신조 만들기' 마감 기한을 확인하세요!</span>
     </div>
 
     <!-- Navigation Header -->
@@ -78,11 +86,22 @@
                 </button>
             </nav>
 
-            <!-- Secondary Action (E-Book Link / Mock) -->
-            <div class="flex items-center space-x-3">
+            <!-- Secondary Action & Auth Section -->
+            <div class="flex items-center space-x-2">
                 <a href="#quick-quiz" onclick="switchTab('theory'); setTimeout(() => document.getElementById('quiz-box').scrollIntoView({behavior: 'smooth'}), 100)" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-600 transition-all text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
                     <i class="fa-solid fa-bolt text-amber-500"></i> 오늘의 퀴즈
                 </a>
+
+                <!-- User Auth Area -->
+                <div id="auth-container" class="flex items-center space-x-2">
+                    <button id="admin-menu-btn" onclick="openAdminModal()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-md flex items-center gap-1.5 animate-pulse">
+                        <i class="fa-solid fa-toolbox"></i> <span>관리 메뉴</span>
+                    </button>
+                    <span id="user-role-badge" class="hidden text-xs font-bold px-2.5 py-1.5 rounded-xl border"></span>
+                    <button id="auth-btn" onclick="toggleAuth()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5">
+                        <i id="auth-icon" class="fa-solid fa-right-to-bracket"></i> <span id="auth-text">로그인</span>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -865,28 +884,19 @@
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-bold text-slate-900 flex items-center gap-2">
-                                <i class="fa-solid fa-hand-fist text-rose-500"></i> 오늘의 찬반 교실 토론
+                                <i class="fa-solid fa-hand-fist text-rose-500"></i> 실시간 학급 찬반 토론
                             </h3>
-                            <span class="text-xs text-rose-600 bg-rose-50 px-2 py-1 rounded-md font-semibold">토론 중</span>
+                            <span class="text-xs text-rose-600 bg-rose-50 px-2 py-1 rounded-md font-semibold">라이브</span>
                         </div>
                         <h4 class="font-bold text-sm text-slate-800 mb-2">논제: "AI(인공지능)에게도 도덕적 지위나 권리를 부여할 수 있는가?"</h4>
-                        <p class="text-xs text-slate-500 mb-4 leading-relaxed">인간만이 가질 수 있는 도덕적 자격을 AI에게 주는 것은 어떤 도덕적 딜레마를 낳을지 의견을 공유해 봅시다.</p>
+                        <p class="text-xs text-slate-500 mb-4 leading-relaxed">학급 친구들과 실시간으로 소통하며 의견을 남겨보세요. 데이터베이스에 실시간 기록됩니다.</p>
 
                         <!-- Live Comments Mock Flow -->
                         <div class="space-y-3 max-h-[220px] overflow-y-auto mb-4 pr-1" id="comments-box">
-                            <div class="bg-slate-50 rounded-xl p-3 text-xs">
-                                <div class="flex justify-between font-bold text-slate-700 mb-1">
-                                    <span>김*은 (찬성)</span>
-                                    <span class="text-[10px] text-slate-400 font-normal">3분 전</span>
-                                </div>
-                                <p class="text-slate-600 leading-relaxed">자율적 결정을 내리고 고통이나 가치 판단을 유사하게 수행한다면 그에 상응하는 도덕적 고려를 해야 한다고 생각해요.</p>
-                            </div>
-                            <div class="bg-slate-50 rounded-xl p-3 text-xs">
-                                <div class="flex justify-between font-bold text-slate-700 mb-1">
-                                    <span>박*민 (반대)</span>
-                                    <span class="text-[10px] text-slate-400 font-normal">15분 전</span>
-                                </div>
-                                <p class="text-slate-600 leading-relaxed">아무리 똑똑해도 AI는 감정이나 참된 도덕적 지성이 없으므로 주체가 될 수 없다고 봅니다.</p>
+                            <!-- Live comments will be loaded here -->
+                            <div class="text-center text-xs py-10 text-slate-400">
+                                <i class="fa-solid fa-circle-notch animate-spin text-teal-500 text-lg mb-2 block mx-auto"></i>
+                                실시간 의견 로딩 중...
                             </div>
                         </div>
                     </div>
@@ -895,7 +905,7 @@
                     <div class="border-t border-slate-100 pt-4">
                         <div class="flex gap-2">
                             <input type="text" id="comment-input" placeholder="내 의견 적기 (150자 내)..." class="flex-grow bg-slate-50 text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-teal-500">
-                            <button onclick="postComment()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-4 rounded-xl transition-colors">등록</button>
+                            <button onclick="postComment()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-4 rounded-xl transition-colors shrink-0">등록</button>
                         </div>
                     </div>
                 </div>
@@ -987,9 +997,9 @@
                         <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
                             <i class="fa-solid fa-square-check text-emerald-500"></i> 나의 과제 관리 체크리스트
                         </h3>
-                        <p class="text-xs text-slate-500 mb-4">제출하기 전 반드시 확인하여 사소한 실수를 방지해 보세요. 체크 상태는 기억됩니다.</p>
+                        <p class="text-xs text-slate-500 mb-4">제출하기 전 반드시 확인하여 사소한 실수를 방지해 보세요. 클라우드에 체크 상태가 저장됩니다.</p>
 
-                        <!-- Checklist Items with Local Saving -->
+                        <!-- Checklist Items with Firestore Saving -->
                         <div class="space-y-3.5">
                             <label class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100/70 rounded-xl cursor-pointer transition-colors">
                                 <input type="checkbox" id="check-1" onchange="saveChecklist()" class="mt-0.5 rounded text-amber-500 focus:ring-amber-400 h-4.5 w-4.5 border-slate-300">
@@ -1071,9 +1081,116 @@
         </div>
     </footer>
 
-    <!-- Custom JS Logic -->
-    <script>
-        // Quotes Database for Interactive Quotes Box
+    <!-- Interactive Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[1000] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-100 animate-fade-in space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-base font-extrabold text-slate-900">도덕 배움터 로그인</h3>
+                <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">역할을 선택하고 이름을 입력하여 맞춤형 도덕 여정을 시작하세요.</p>
+            
+            <!-- Role Selection Tabs -->
+            <div class="grid grid-cols-2 gap-2.5">
+                <button id="role-student-btn" onclick="selectLoginRole('student')" class="py-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xs font-bold flex flex-col items-center gap-1.5 transition-all">
+                    <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    <span>학생으로 접속</span>
+                </button>
+                <button id="role-admin-btn" onclick="selectLoginRole('admin')" class="py-3 rounded-xl border border-slate-200 text-slate-500 text-xs font-medium hover:border-emerald-500 hover:text-emerald-600 flex flex-col items-center gap-1.5 transition-all">
+                    <i class="fa-solid fa-user-shield text-xl"></i>
+                    <span>관리자로 접속</span>
+                </button>
+            </div>
+
+            <!-- Name Input Field -->
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-600 block">이름 / 닉네임</label>
+                <input type="text" id="login-username" placeholder="이름을 입력하세요 (예: 홍길동)" class="w-full bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <!-- Submit Button -->
+            <button onclick="submitLogin()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-md shadow-emerald-100">
+                로그인 완료
+            </button>
+        </div>
+    </div>
+
+    <!-- Interactive Admin Control Modal -->
+    <div id="admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[1000] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100 animate-fade-in space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-base font-extrabold text-indigo-950 flex items-center gap-2">
+                    <i class="fa-solid fa-toolbox text-indigo-600"></i> 도덕 배움터 관리자 컨트롤 센터
+                </h3>
+                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Announcement Management (Realtime Sync) -->
+            <div class="space-y-2">
+                <label class="text-xs font-extrabold text-slate-700 block">
+                    <i class="fa-solid fa-bullhorn text-indigo-500 mr-1.5"></i>학급 실시간 상단 공지사항 제어
+                </label>
+                <p class="text-[11px] text-slate-400 leading-relaxed">최상단 안내 배너에 노출될 내용을 수정합니다. 전 학급 브라우저에 실시간 반영됩니다.</p>
+                <div class="flex gap-2">
+                    <input type="text" id="admin-announcement-input" placeholder="새 학급 공지사항을 입력하세요..." class="flex-grow bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-indigo-500">
+                    <button onclick="updateAnnouncement()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 rounded-xl transition-all shrink-0">변경</button>
+                </div>
+            </div>
+
+            <!-- Quick Admin Tool Actions -->
+            <div class="space-y-3">
+                <h4 class="text-xs font-extrabold text-slate-700"><i class="fa-solid fa-bolt text-indigo-500 mr-1.5"></i>도덕 교실 일괄 제어 도구</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button onclick="addAdminAnnouncementPost()" class="p-3 bg-indigo-50 hover:bg-indigo-100/70 border border-indigo-100 rounded-xl text-left transition-all">
+                        <span class="block font-bold text-xs text-indigo-950">📢 교사 공식 알림 등록</span>
+                        <span class="block text-[10px] text-slate-500 mt-1">실시간 토론방 최상단에 교사용 수업 가이드를 일괄 전파합니다.</span>
+                    </button>
+                    <button onclick="mockDeleteDatabase()" class="p-3 bg-rose-50 hover:bg-rose-100/70 border border-rose-100 rounded-xl text-left transition-all">
+                        <span class="block font-bold text-xs text-rose-950">🧹 토론 정화 주의 배포</span>
+                        <span class="block text-[10px] text-slate-500 mt-1">학급 토론방에 부적절한 언행 삼가 요청 시스템 공지를 전송합니다.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Connection Status -->
+            <div class="bg-slate-50 p-4 rounded-2xl flex items-center justify-between">
+                <div>
+                    <h5 class="font-bold text-xs text-slate-800">에듀테크 학습 플랫폼 연동</h5>
+                    <p class="text-[10px] text-slate-400 mt-0.5">실시간 클라우드 DB 통신 상태 정상</p>
+                </div>
+                <span class="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-black animate-pulse flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> LIVE SYNCED
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== FIREBASE MODULE & SCRIPTS ==================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Environment fallback logic to merge injected Firebase credentials
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "AIzaSyDtqBhFN78s_p3IzCWY4du6Js-4nZNOkkQ",
+                authDomain: "ethics2class-7d33d.firebaseapp.com",
+                projectId: "ethics2class-7d33d",
+                storageBucket: "ethics2class-7d33d.firebasestorage.app",
+                messagingSenderId: "533664078365",
+                appId: "1:533664078365:web:f7a7390e38d1dd6a4184f4"
+              };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ethics2class-7d33d';
+
+        // Core variables
+        let appInstance, db, auth, userId = null;
+        let currentUser = null;
+        let selectedRole = 'student';
+
+        // Static quotes
         const quotes = [
             { text: "성찰하지 않는 삶은 살 가치가 없다.", author: "소크라테스 (Socrates)" },
             { text: "인(仁)은 사람다운 마음이며, 의(義)는 사람이 마땅히 가야 할 바른 길이다.", author: "맹자 (Mencius)" },
@@ -1084,29 +1201,29 @@
             { text: "남이 나에게 베풀어 주기를 바라는 대로 남에게 베풀어라.", author: "신약성경 (Golden Rule)" }
         ];
 
-        // Core Quiz Database
+        // Static quiz list
         const quizQuestions = [
             {
                 question: "\"남에게 대접받고자 하는 대로 대접하라\"라는 보편적 도덕 가치를 뜻하는 법칙은?",
                 options: ["1) 무지의 장막", "2) 수오지심의 원리", "3) 황금률 (Golden Rule)", "4) 공리주의의 원칙"],
-                answer: 2, // Option 3 is correct
+                answer: 2,
                 feedback: "정답입니다! 황금률은 고대부터 동서양을 막론하고 인간 행동의 보편적 기준으로 널리 인정받아 왔습니다."
             },
             {
                 question: "정의론으로 유명하며, 공정한 사회적 조건에 합의하기 위해 가상의 계약자들이 '자신의 지위를 모르는 상태'인 '무지의 장막'을 제안한 철학자는?",
                 options: ["1) 존 롤스 (John Rawls)", "2) 존 스튜어트 밀 (John Stuart Mill)", "3) 토마스 홉스 (Thomas Hobbes)", "4) 이황 (Lee Hwang)"],
-                answer: 0, // Option 1 is correct
+                answer: 0,
                 feedback: "정답입니다! 존 롤스는 자신이 유리할지 불리할지 모르는 가상의 상태를 뜻하는 '무지의 장막'을 고안하여 공정한 원칙을 탐구했습니다."
             },
             {
                 question: "타인의 처지를 미루어 상대의 입장을 헤아리고 공감하는 태도를 가리키는 고사성어는?",
                 options: ["1) 결초보은 (結草報恩)", "2) 역지사지 (易地思之)", "3) 각주구검 (刻舟求劍)", "4) 수오지심 (羞惡之心)"],
-                answer: 1, // Option 2 is correct
+                answer: 1,
                 feedback: "정답입니다! 역지사지는 '처지를 바꾸어 생각한다'라는 뜻으로 도덕적 소통과 배려의 가장 핵심적인 실천 방향입니다."
             }
         ];
 
-        // Sorting Game Database
+        // Sorting game cards
         const valueCards = [
             { word: "효도 (孝道)", desc: "부모님을 정성껏 모시고 받드는 참된 도리", category: "others" },
             { word: "도덕적 성찰", desc: "나의 말과 행동이 올바른지 마음을 돌이켜 살핌", category: "self" },
@@ -1116,53 +1233,301 @@
             { word: "시민 불복종", desc: "정의롭지 않은 법에 대해 비폭력적인 방식으로 준수를 거부함", category: "society" }
         ];
 
-        // App States
         let currentQuizIndex = 0;
         let selectedQuizAnswer = null;
         let currentSortingIndex = 0;
-        let sortedCount = 0;
 
-        // On Load initialization
-        window.onload = function() {
+        // Initialize Firebase on document load
+        window.onload = async function() {
             generateNewQuote();
-            loadChecklist();
             calculateEstimator();
+            
+            // Check for locally cached profile
+            const savedUser = localStorage.getItem('ethicsUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+
+            try {
+                appInstance = initializeApp(firebaseConfig);
+                db = getFirestore(appInstance);
+                auth = getAuth(appInstance);
+
+                // RULE 3: Secure Auth session before making any database queries
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Auth initialization warning, falling back to local-only store: ", err);
+            }
+
+            // Bind to state listener
+            if (auth) {
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("Authenticated with complete user identity: " + userId);
+                        
+                        // Sync profile to database if logged in
+                        if (currentUser) {
+                            await syncProfileToDatabase();
+                        }
+                        
+                        // Activate real-time database feeds
+                        setupRealtimeDiscussion();
+                        setupRealtimeAnnouncement();
+                        loadChecklistFromDatabase();
+                    } else {
+                        userId = null;
+                    }
+                    updateAuthUI();
+                });
+            } else {
+                updateAuthUI();
+                renderFallbackComments();
+            }
         }
 
-        // --- NAVIGATION TABS LOGIC ---
+        // Setup Firestore profiles
+        async function syncProfileToDatabase() {
+            if (!userId || !db) return;
+            try {
+                // RULE 1: Use private document path
+                const profileDocRef = doc(db, 'artifacts', appId, 'users', userId, 'profile', 'info');
+                await setDoc(profileDocRef, {
+                    name: currentUser.name,
+                    role: currentUser.role,
+                    updatedAt: new Date().toISOString()
+                });
+            } catch (err) {
+                console.error("Profile sync failed: ", err);
+            }
+        }
+
+        // --- AUTH INTERACTIVITY ---
+        function toggleAuth() {
+            if (currentUser) {
+                currentUser = null;
+                localStorage.removeItem('ethicsUser');
+                updateAuthUI();
+                showToast("로그아웃 완료", "안전하게 로그아웃 되었습니다.", "success");
+            } else {
+                openLoginModal();
+            }
+        }
+
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+            document.getElementById('login-modal').classList.add('flex');
+            document.getElementById('login-username').value = '';
+            selectLoginRole('student');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('login-modal').classList.remove('flex');
+        }
+
+        function selectLoginRole(role) {
+            selectedRole = role;
+            const studentBtn = document.getElementById('role-student-btn');
+            const adminBtn = document.getElementById('role-admin-btn');
+
+            if (role === 'student') {
+                studentBtn.className = "py-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xs font-bold flex flex-col items-center gap-1.5 transition-all";
+                adminBtn.className = "py-3 rounded-xl border border-slate-200 text-slate-500 text-xs font-medium hover:border-emerald-500 hover:text-emerald-600 flex flex-col items-center gap-1.5 transition-all";
+            } else {
+                adminBtn.className = "py-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xs font-bold flex flex-col items-center gap-1.5 transition-all";
+                studentBtn.className = "py-3 rounded-xl border border-slate-200 text-slate-500 text-xs font-medium hover:border-emerald-500 hover:text-emerald-600 flex flex-col items-center gap-1.5 transition-all";
+            }
+        }
+
+        async function submitLogin() {
+            const nameInput = document.getElementById('login-username');
+            const name = nameInput.value.trim();
+            const displayName = name || (selectedRole === 'student' ? '도덕인' : '이도덕 선생님');
+
+            currentUser = {
+                name: displayName,
+                role: selectedRole
+            };
+
+            localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
+            closeLoginModal();
+            triggerConfetti();
+            showToast("로그인 성공!", `${currentUser.name}님, 도덕 배움터 연동이 완료되었습니다.`, "success");
+            
+            // Sync up user credential with Firestore user document
+            if (userId) {
+                await syncProfileToDatabase();
+            }
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const authBtn = document.getElementById('auth-btn');
+            const authIcon = document.getElementById('auth-icon');
+            const authText = document.getElementById('auth-text');
+            const roleBadge = document.getElementById('user-role-badge');
+            const adminMenuBtn = document.getElementById('admin-menu-btn');
+
+            if (currentUser) {
+                authBtn.className = "bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5";
+                authIcon.className = "fa-solid fa-right-from-bracket";
+                authText.innerText = "로그아웃";
+
+                roleBadge.classList.remove('hidden');
+                
+                if (currentUser.role === 'student') {
+                    roleBadge.className = "text-xs font-extrabold px-2.5 py-1.5 rounded-xl border bg-emerald-50 text-emerald-700 border-emerald-200 flex items-center gap-1";
+                    roleBadge.innerHTML = `<i class="fa-solid fa-graduation-cap"></i> 학생: ${currentUser.name}`;
+                    roleBadge.title = "User ID: " + userId;
+                    adminMenuBtn.classList.add('hidden');
+                } else {
+                    roleBadge.className = "text-xs font-extrabold px-2.5 py-1.5 rounded-xl border bg-indigo-50 text-indigo-700 border-indigo-200 flex items-center gap-1";
+                    roleBadge.innerHTML = `<i class="fa-solid fa-user-shield"></i> 관리자: ${currentUser.name}`;
+                    roleBadge.title = "User ID: " + userId;
+                    adminMenuBtn.classList.remove('hidden');
+                }
+            } else {
+                authBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1.5";
+                authIcon.className = "fa-solid fa-right-to-bracket";
+                authText.innerText = "로그인";
+                roleBadge.classList.add('hidden');
+                adminMenuBtn.classList.add('hidden');
+            }
+        }
+
+        // --- ADMIN MODULE CONTROLS (Firestore Integration) ---
+        function openAdminModal() {
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast("접근 차단", "관리자 권한을 가진 계정만 접근할 수 있습니다.", "warning");
+                return;
+            }
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-modal').classList.add('flex');
+            document.getElementById('admin-announcement-input').value = document.getElementById('top-banner-text').innerText.replace('[공지] ', '');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+            document.getElementById('admin-modal').classList.remove('flex');
+        }
+
+        function setupRealtimeAnnouncement() {
+            if (!db) return;
+            // RULE 1: Strict public folder path
+            const announcementDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'announcement');
+            onSnapshot(announcementDocRef, (snap) => {
+                if (snap.exists()) {
+                    const data = snap.data();
+                    if (data && data.text) {
+                        document.getElementById('top-banner-text').innerText = `[공지] ${data.text}`;
+                    }
+                }
+            }, (error) => {
+                console.warn("Failed to listen to realtime settings: ", error);
+            });
+        }
+
+        async function updateAnnouncement() {
+            const input = document.getElementById('admin-announcement-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (db) {
+                try {
+                    // RULE 1: Strict public data storage path
+                    const announcementDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'announcement');
+                    await setDoc(announcementDocRef, {
+                        text: text,
+                        updatedAt: new Date().toISOString()
+                    });
+                    showToast("공지 변경 완료", "전체 학급 브라우저에 실시간으로 공지사항이 적용되었습니다.", "success");
+                    triggerConfetti();
+                } catch (err) {
+                    console.error("Announcement set failed: ", err);
+                    showToast("변경 실패", "네트워크 에러로 실시간 반영에 실패했습니다.", "warning");
+                }
+            } else {
+                document.getElementById('top-banner-text').innerText = `[공지] ${text}`;
+                showToast("로컬 공지 적용", "네트워크 미연동 상태로 로컬 브라우저에 임시 적용되었습니다.", "success");
+            }
+        }
+
+        async function addAdminAnnouncementPost() {
+            if (!userId) return;
+            try {
+                if (db) {
+                    // RULE 1: Strict path
+                    const commentsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'discussion');
+                    await addDoc(commentsCollection, {
+                        userId: userId,
+                        name: currentUser ? currentUser.name : "이도덕 선생님",
+                        role: "admin",
+                        text: "📢 [공식 안내] 오늘의 찬반 토론 참여에 주체적으로 임해 주시기 바랍니다. 성숙하고 열린 도덕적 상상력으로 타인의 가치를 적극 경청해 봅시다.",
+                        createdAt: new Date().toISOString()
+                    });
+                    showToast("선생님 공지 등록", "토론방 최상단에 교사 정식 오피셜 알림이 등록되었습니다.", "success");
+                    closeAdminModal();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function mockDeleteDatabase() {
+            if (!userId) return;
+            try {
+                if (db) {
+                    // RULE 1: Strict path
+                    const commentsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'discussion');
+                    await addDoc(commentsCollection, {
+                        userId: userId,
+                        name: "시스템 관리자",
+                        role: "admin",
+                        text: "⚠️ [모니터링 경고] 현재 실시간 도덕 찬반 토론 공간이 모니터링 중입니다. 욕설, 비방, 장난스러운 글 등록 시 참여 활동 수행평가에서 불이익이 발생할 수 있습니다.",
+                        createdAt: new Date().toISOString()
+                    });
+                    showToast("정화 경고 발송", "전 구성원 브라우저의 토론창에 실시간 주의 공고를 전파했습니다.", "success");
+                    closeAdminModal();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // --- SPA NAVIGATION TABS ---
         function switchTab(tabId) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
 
-            // Show current tab
             const targetTab = document.getElementById(`tab-${tabId}`);
-            if(targetTab) {
+            if (targetTab) {
                 targetTab.classList.add('active');
             }
 
-            // Update Nav button styles
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-emerald-600 hover:bg-slate-50 transition-all duration-200";
             });
 
             const activeBtn = document.getElementById(`nav-${tabId}`);
-            if(activeBtn) {
+            if (activeBtn) {
                 activeBtn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-bold text-emerald-600 bg-emerald-50 transition-all duration-200";
             }
 
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- HOMEPAGE INTERACTION: QUOTE GENERATOR ---
+        // --- HOME PAGE: QUOTE GENERATOR ---
         function generateNewQuote() {
             const randomIndex = Math.floor(Math.random() * quotes.length);
             const quoteTextEl = document.getElementById('quote-text');
             const quoteAuthorEl = document.getElementById('quote-author');
 
-            // Apply quick animation effect
             quoteTextEl.style.opacity = '0';
             quoteAuthorEl.style.opacity = '0';
 
@@ -1176,8 +1541,6 @@
 
         function copyQuote() {
             const textToCopy = `${document.getElementById('quote-text').innerText} ${document.getElementById('quote-author').innerText}`;
-            
-            // Clipboard Copy Guardrail (using dynamic text areas)
             const dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
             dummy.value = textToCopy;
@@ -1185,10 +1548,10 @@
             document.execCommand("copy");
             document.body.removeChild(dummy);
 
-            showToast("Copied!", "명언이 클립보드에 복사되었습니다.", "success");
+            showToast("복사 성공!", "명언이 클립보드에 복사되었습니다.", "success");
         }
 
-        // --- THEORY CLASS INTERACTION: SYLLABUS ACCORDION ---
+        // --- CHAPTER ACCORDIONS ---
         function toggleChapter(chId) {
             const body = document.getElementById(`${chId}-body`);
             const icon = document.getElementById(`${chId}-icon`);
@@ -1204,9 +1567,9 @@
             }
         }
 
-        // --- THEORY CLASS INTERACTION: MINI QUIZ ---
+        // --- MULTIPLE CHOICE QUIZ ---
         function checkQuizAnswer(selectedIndex) {
-            if(selectedQuizAnswer !== null) return; // Answer already locked in
+            if (selectedQuizAnswer !== null) return;
             
             selectedQuizAnswer = selectedIndex;
             const currentQuiz = quizQuestions[currentQuizIndex];
@@ -1216,8 +1579,7 @@
 
             feedbackBox.classList.remove('hidden');
 
-            if(selectedIndex === currentQuiz.answer) {
-                // Correct
+            if (selectedIndex === currentQuiz.answer) {
                 buttons[selectedIndex].classList.add('border-emerald-500', 'bg-emerald-950/40', 'text-emerald-300');
                 buttons[selectedIndex].querySelector('i').className = "fa-solid fa-circle-check text-emerald-400";
                 
@@ -1226,39 +1588,30 @@
                 
                 triggerConfetti();
             } else {
-                // Wrong
                 buttons[selectedIndex].classList.add('border-rose-500', 'bg-rose-950/40', 'text-rose-300');
                 buttons[selectedIndex].querySelector('i').className = "fa-solid fa-circle-xmark text-rose-400";
 
                 buttons[currentQuiz.answer].classList.add('border-emerald-500', 'bg-emerald-950/20', 'text-emerald-400');
                 
                 feedbackBox.className = "mt-4 p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300 text-xs font-semibold";
-                feedbackBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-rose-400"></i> 아쉽습니다! 올바른 답은 '${currentQuiz.options[currentQuiz.answer]}' 입니다.`;
+                feedbackBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-rose-400"></i> 아쉽습니다! 정답은 '${currentQuiz.options[currentQuiz.answer]}' 입니다.`;
             }
 
-            // Show "Next" Button
             document.getElementById('next-quiz-btn').classList.remove('hidden');
             document.getElementById('next-quiz-btn').classList.add('flex');
         }
 
         function nextQuizQuestion() {
-            currentQuizIndex++;
-            if(currentQuizIndex >= quizQuestions.length) {
-                // End of quiz cycle - reset
-                currentQuizIndex = 0;
-            }
-
+            currentQuizIndex = (currentQuizIndex + 1) % quizQuestions.length;
             selectedQuizAnswer = null;
             const nextQuiz = quizQuestions[currentQuizIndex];
 
-            // Update HTML Question & Options
             document.getElementById('quiz-question').innerText = nextQuiz.question;
             document.getElementById('quiz-progress-text').innerText = `문제 ${currentQuizIndex + 1} / 3`;
             document.getElementById('quiz-feedback').classList.add('hidden');
             document.getElementById('next-quiz-btn').classList.add('hidden');
             document.getElementById('next-quiz-btn').classList.remove('flex');
 
-            // Rebuild quiz options
             const optionsContainer = document.getElementById('quiz-options-container');
             optionsContainer.innerHTML = '';
             nextQuiz.options.forEach((opt, idx) => {
@@ -1271,26 +1624,24 @@
             });
         }
 
-        // --- ACTIVITY CLASS INTERACTION: VALUE CARD SORTING GAME ---
+        // --- VALUE CLASSIFICATION GAME ---
         function dropCard(categoryName) {
             const currentCard = valueCards[currentSortingIndex];
             const feedbackText = document.getElementById('sorting-game-feedback');
             
-            if(currentCard.category === categoryName) {
+            if (currentCard.category === categoryName) {
                 feedbackText.className = "text-xs font-bold text-teal-600 animate-pulse";
-                feedbackText.innerHTML = `<i class="fa-solid fa-circle-check"></i> 올바른 선택입니다! '${currentCard.word}'은(는) 이 영역이 맞습니다.`;
+                feedbackText.innerHTML = `<i class="fa-solid fa-circle-check"></i> 정답입니다! '${currentCard.word}'은(는) 이 영역에 포함됩니다.`;
                 triggerConfetti();
             } else {
                 feedbackText.className = "text-xs font-bold text-rose-500";
-                feedbackText.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 잘못된 위치입니다. 가치를 더 심도 있게 다듬어 봐요!`;
+                feedbackText.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 맞지 않습니다. 다시 한 번 신중하게 판단해 보아요!`;
             }
 
-            // Move to next card
             setTimeout(() => {
-                currentSortingIndex++;
-                if(currentSortingIndex >= valueCards.length) {
-                    currentSortingIndex = 0;
-                    showToast("분류 완료!", "모든 도덕 가치 단어를 올바르게 성찰하고 재배열했습니다.", "success");
+                currentSortingIndex = (currentSortingIndex + 1) % valueCards.length;
+                if (currentSortingIndex === 0) {
+                    showToast("학습 완료!", "모든 가치 카드를 완벽하게 식별했습니다.", "success");
                 }
                 
                 document.getElementById('sorting-progress-text').innerText = `진행률: ${currentSortingIndex + 1} / ${valueCards.length}`;
@@ -1310,75 +1661,219 @@
             document.getElementById('sorting-game-feedback').innerText = "분류를 시작하세요!";
         }
 
-        // --- ACTIVITY CLASS INTERACTION: CLASS DISCUSSION FORUM ---
-        function postComment() {
-            const commentInput = document.getElementById('comment-input');
-            const commentText = commentInput.value.trim();
-            if(!commentText) return;
+        // --- REALTIME CLASS DISCUSSION FORUM (Firestore Integration) ---
+        function setupRealtimeDiscussion() {
+            if (!db) {
+                renderFallbackComments();
+                return;
+            }
 
-            const commentsBox = document.getElementById('comments-box');
-            const newComment = document.createElement('div');
-            newComment.className = "bg-teal-50/50 rounded-xl p-3 text-xs border border-teal-100/50 animate-fade-in";
-            newComment.innerHTML = `
-                <div class="flex justify-between font-bold text-slate-700 mb-1">
-                    <span>나 (학생)</span>
-                    <span class="text-[10px] text-slate-400 font-normal">방금 전</span>
-                </div>
-                <p class="text-slate-600 leading-relaxed">${escapeHtml(commentText)}</p>
-            `;
+            // RULE 1: Strict public folder path
+            const commentsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'discussion');
             
-            commentsBox.insertBefore(newComment, commentsBox.firstChild);
-            commentInput.value = '';
-            commentsBox.scrollTop = 0;
-            showToast("등록 완료!", "토론 의견이 모의 게시판에 전송되었습니다.", "success");
+            // RULE 2: No complex queries inside onSnapshot. Fetch simply and sort in memory.
+            onSnapshot(commentsCollection, (snapshot) => {
+                const commentList = [];
+                snapshot.forEach(doc => {
+                    commentList.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Client-side memory sorting
+                commentList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                renderLiveComments(commentList);
+            }, (error) => {
+                console.warn("Realtime listener failed, falling back: ", error);
+                renderFallbackComments();
+            });
         }
 
-        // --- ASSESSMENT INTERACTION: ESTIMATOR & CHECKLIST ---
-        function calculateEstimator() {
-            const m1 = parseInt(document.getElementById('metric-1').value);
-            const m2 = parseInt(document.getElementById('metric-2').value);
-            const m3 = parseInt(document.getElementById('metric-3').value);
+        function renderLiveComments(list) {
+            const commentsBox = document.getElementById('comments-box');
+            commentsBox.innerHTML = '';
 
-            // Update Label texts
-            document.getElementById('metric-1-val').innerText = `${m1}점`;
-            document.getElementById('metric-2-val').innerText = `${m2}점`;
-            document.getElementById('metric-3-val').innerText = `${m3}점`;
+            if (list.length === 0) {
+                commentsBox.innerHTML = `
+                    <div class="text-center text-xs py-12 text-slate-400">
+                        <i class="fa-solid fa-pencil text-slate-300 text-lg mb-2 block mx-auto"></i>
+                        등록된 의견이 없습니다. 첫 찬반 한마디를 나누어 보세요!
+                    </div>
+                `;
+                return;
+            }
 
-            // Calculate score
-            const total = m1 + m2 + m3;
-            document.getElementById('estimator-total').innerText = `${total} / 30 점`;
+            list.forEach(item => {
+                const isMyComment = item.userId === userId;
+                const roleColorClass = item.role === 'student' ? 'text-teal-600 bg-teal-50' : 'text-indigo-600 bg-indigo-50';
+                const roleLabel = item.role === 'student' ? '학생' : '관리자';
 
-            // Calculate grade
-            const gradeEl = document.getElementById('estimator-grade');
-            if(total >= 26) {
-                gradeEl.innerText = "A (우수)";
-                gradeEl.className = "text-2xl font-black text-emerald-600";
-            } else if(total >= 20) {
-                gradeEl.innerText = "B (보통)";
-                gradeEl.className = "text-2xl font-black text-amber-500";
-            } else {
-                gradeEl.innerText = "C (노력필요)";
-                gradeEl.className = "text-2xl font-black text-rose-500";
+                commentsBox.innerHTML += `
+                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 text-xs animate-fade-in ${isMyComment ? 'border-teal-200 bg-teal-50/10' : ''}">
+                        <div class="flex justify-between items-center mb-1">
+                            <div class="flex items-center gap-1.5 font-bold text-slate-700">
+                                <span>${escapeHtml(item.name)}</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded ${roleColorClass}">${roleLabel}</span>
+                            </div>
+                            <span class="text-[9px] text-slate-400">${formatRelativeTime(item.createdAt)}</span>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">${escapeHtml(item.text)}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function renderFallbackComments() {
+            const commentsBox = document.getElementById('comments-box');
+            commentsBox.innerHTML = `
+                <div class="bg-slate-50 rounded-xl p-3 text-xs border border-slate-100">
+                    <div class="flex justify-between font-bold text-slate-700 mb-1">
+                        <span>김*은 (찬성)</span>
+                        <span class="text-[10px] text-slate-400 font-normal">3분 전</span>
+                    </div>
+                    <p class="text-slate-600 leading-relaxed">자율적 결정을 내리고 도덕적 판단에 책임을 갖는 시점부터 상응하는 고려를 받아야 합니다.</p>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-3 text-xs border border-slate-100 mt-2">
+                    <div class="flex justify-between font-bold text-slate-700 mb-1">
+                        <span>박*민 (반대)</span>
+                        <span class="text-[10px] text-slate-400 font-normal">15분 전</span>
+                    </div>
+                    <p class="text-slate-600 leading-relaxed">AI는 모방 데이터일 뿐, 자유의지나 참된 도덕적 지성이 없으므로 주체가 될 수 없습니다.</p>
+                </div>
+            `;
+        }
+
+        async function postComment() {
+            const commentInput = document.getElementById('comment-input');
+            const commentText = commentInput.value.trim();
+            if (!commentText) return;
+
+            const name = currentUser ? currentUser.name : '무명 도덕인';
+            const role = currentUser ? currentUser.role : 'student';
+
+            // Check security constraints
+            if (!userId) {
+                showToast("로그인 필요", "실시간 소통을 나누시려면 우측 상단에서 간편하게 로그인을 진행해 주세요.", "warning");
+                return;
+            }
+
+            try {
+                if (db) {
+                    // RULE 1: Strict public data insertion path
+                    const commentsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'discussion');
+                    await addDoc(commentsCollection, {
+                        userId: userId,
+                        name: name,
+                        role: role,
+                        text: commentText,
+                        createdAt: new Date().toISOString()
+                    });
+                    showToast("의견 등록 완료", "교실 토론 마당에 실시간으로 의견이 배포되었습니다.", "success");
+                    commentInput.value = '';
+                } else {
+                    throw new Error("Local fallback mode only");
+                }
+            } catch (err) {
+                // Local memory preview update in case DB fails
+                const commentsBox = document.getElementById('comments-box');
+                const cleanBox = commentsBox.innerHTML.includes("로딩 중") || commentsBox.innerHTML.includes("등록된 의견이 없습니다");
+                if (cleanBox) commentsBox.innerHTML = '';
+
+                const newComment = document.createElement('div');
+                newComment.className = "bg-teal-50/50 rounded-xl p-3 text-xs border border-teal-100/50 animate-fade-in mb-2";
+                newComment.innerHTML = `
+                    <div class="flex justify-between font-bold text-slate-700 mb-1">
+                        <span>${escapeHtml(name)} (로컬 저장)</span>
+                        <span class="text-[10px] text-slate-400 font-normal">방금 전</span>
+                    </div>
+                    <p class="text-slate-600 leading-relaxed">${escapeHtml(commentText)}</p>
+                `;
+                commentsBox.insertBefore(newComment, commentsBox.firstChild);
+                commentInput.value = '';
+                commentsBox.scrollTop = 0;
+                showToast("임시 로컬 등록", "네트워크에 접속할 수 없어 임시 로컬 뷰에 기록되었습니다.", "warning");
             }
         }
 
-        // Checklist local storage save & load
-        function saveChecklist() {
+        // --- CLOUD-SYNCED ASSESSMENT CHECKLIST (Firestore Integration) ---
+        async function saveChecklist() {
             const checks = {
                 check1: document.getElementById('check-1').checked,
                 check2: document.getElementById('check-2').checked,
                 check3: document.getElementById('check-3').checked
             };
+            
+            // Local fallback backup
             localStorage.setItem('ethicsChecklist', JSON.stringify(checks));
+
+            // Sync user data to Firebase
+            if (userId && db) {
+                try {
+                    // RULE 1: Strict user private document storage path
+                    const checklistDoc = doc(db, 'artifacts', appId, 'users', userId, 'checklist', 'state');
+                    await setDoc(checklistDoc, {
+                        checks: checks,
+                        updatedAt: new Date().toISOString()
+                    });
+                } catch (err) {
+                    console.error("Firebase database checklist save failed: ", err);
+                }
+            }
         }
 
-        function loadChecklist() {
+        async function loadChecklistFromDatabase() {
+            // First load from local storage cache for rapid startup
             const saved = localStorage.getItem('ethicsChecklist');
-            if(saved) {
+            if (saved) {
                 const checks = JSON.parse(saved);
-                document.getElementById('check-1').checked = checks.check1;
-                document.getElementById('check-2').checked = checks.check2;
-                document.getElementById('check-3').checked = checks.check3;
+                applyChecklistToUI(checks);
+            }
+
+            if (userId && db) {
+                try {
+                    // RULE 1: Strict user private document fetch path
+                    const checklistDoc = doc(db, 'artifacts', appId, 'users', userId, 'checklist', 'state');
+                    const snap = await getDoc(checklistDoc);
+                    if (snap.exists()) {
+                        const data = snap.data();
+                        if (data && data.checks) {
+                            applyChecklistToUI(data.checks);
+                            localStorage.setItem('ethicsChecklist', JSON.stringify(data.checks));
+                        }
+                    }
+                } catch (err) {
+                    console.error("Firebase database checklist load failed: ", err);
+                }
+            }
+        }
+
+        function applyChecklistToUI(checks) {
+            document.getElementById('check-1').checked = !!checks.check1;
+            document.getElementById('check-2').checked = !!checks.check2;
+            document.getElementById('check-3').checked = !!checks.check3;
+        }
+
+        // --- ESTIMATOR ---
+        function calculateEstimator() {
+            const m1 = parseInt(document.getElementById('metric-1').value);
+            const m2 = parseInt(document.getElementById('metric-2').value);
+            const m3 = parseInt(document.getElementById('metric-3').value);
+
+            document.getElementById('metric-1-val').innerText = `${m1}점`;
+            document.getElementById('metric-2-val').innerText = `${m2}점`;
+            document.getElementById('metric-3-val').innerText = `${m3}점`;
+
+            const total = m1 + m2 + m3;
+            document.getElementById('estimator-total').innerText = `${total} / 30 점`;
+
+            const gradeEl = document.getElementById('estimator-grade');
+            if (total >= 26) {
+                gradeEl.innerText = "A (우수)";
+                gradeEl.className = "text-2xl font-black text-emerald-600";
+            } else if (total >= 20) {
+                gradeEl.innerText = "B (보통)";
+                gradeEl.className = "text-2xl font-black text-amber-500";
+            } else {
+                gradeEl.innerText = "C (노력필요)";
+                gradeEl.className = "text-2xl font-black text-rose-500";
             }
         }
 
@@ -1388,16 +1883,15 @@
             const check3 = document.getElementById('check-3').checked;
 
             if (check1 && check2 && check3) {
-                showToast("검수 완료!", "모든 요건이 완벽하게 갖추어졌습니다! 수행평가를 안심하고 제출하세요.", "success");
+                showToast("검수 만족!", "수행평가 체크리스트 요건이 모두 충족되었습니다.", "success");
                 triggerConfetti();
             } else {
-                showToast("주의!", "일부 검수 항목이 누락되었습니다. 마감 조건들을 꼼꼼하게 다시 챙겨주세요.", "warning");
+                showToast("체크 미달", "누락된 검사 조건이 존재합니다. 다시 한 번 검토바랍니다.", "warning");
             }
         }
 
-        // --- HELPER UTILITY: TOAST COMPONENT (Replacer of alerts) ---
+        // --- HELPER COMPONENT (Toast & Confetti) ---
         function showToast(title, desc, type) {
-            // Check if any existing toast exists, remove it
             const existingToast = document.getElementById('toast-box');
             if (existingToast) existingToast.remove();
 
@@ -1406,7 +1900,7 @@
             toast.className = `fixed bottom-4 right-4 z-[9999] p-4 rounded-2xl shadow-xl border flex items-start gap-3 max-w-sm transition-all duration-300 transform translate-y-2 opacity-0 bg-white`;
             
             let iconMarkup = '';
-            if(type === 'success') {
+            if (type === 'success') {
                 toast.classList.add('border-emerald-200');
                 iconMarkup = `<div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-circle-check"></i></div>`;
             } else {
@@ -1424,19 +1918,16 @@
 
             document.body.appendChild(toast);
             
-            // Trigger animation
             setTimeout(() => {
                 toast.classList.remove('translate-y-2', 'opacity-0');
             }, 50);
 
-            // Hide and clear
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
             }, 4000);
         }
 
-        // --- HELPER UTILITY: CONFETTI EFFECT ---
         const canvas = document.getElementById('confetti-canvas');
         const ctx = canvas.getContext('2d');
         let confetti = [];
@@ -1463,7 +1954,7 @@
                     rotationSpeed: Math.random() * 6 - 3
                 });
             }
-            if(confetti.length === 60) {
+            if (confetti.length === 60) {
                 requestAnimationFrame(updateConfetti);
             }
         }
@@ -1484,7 +1975,6 @@
                 ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size);
                 ctx.restore();
 
-                // Remove out of screen elements
                 if (c.y > canvas.height + 20) {
                     confetti.splice(i, 1);
                     i--;
@@ -1495,7 +1985,6 @@
             }
         }
 
-        // Escape helper
         function escapeHtml(text) {
             return text
                 .replace(/&/g, "&amp;")
@@ -1504,6 +1993,46 @@
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
         }
+
+        function formatRelativeTime(dateString) {
+            try {
+                const date = new Date(dateString);
+                const diff = new Date() - date;
+                const seconds = Math.floor(diff / 1000);
+                if (seconds < 60) return "방금 전";
+                const minutes = Math.floor(seconds / 60);
+                if (minutes < 60) return `${minutes}분 전`;
+                const hours = Math.floor(minutes / 60);
+                if (hours < 24) return `${hours}시간 전`;
+                return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+            } catch (err) {
+                return "기록됨";
+            }
+        }
+
+        // Exporting local module-scoped functions to global window context for HTML event attributes
+        window.switchTab = switchTab;
+        window.generateNewQuote = generateNewQuote;
+        window.copyQuote = copyQuote;
+        window.toggleChapter = toggleChapter;
+        window.checkQuizAnswer = checkQuizAnswer;
+        window.nextQuizQuestion = nextQuizQuestion;
+        window.dropCard = dropCard;
+        window.resetSortingGame = resetSortingGame;
+        window.postComment = postComment;
+        window.calculateEstimator = calculateEstimator;
+        window.saveChecklist = saveChecklist;
+        window.simulateSubmission = simulateSubmission;
+        window.toggleAuth = toggleAuth;
+        window.openLoginModal = openLoginModal;
+        window.closeLoginModal = closeLoginModal;
+        window.selectLoginRole = selectLoginRole;
+        window.submitLogin = submitLogin;
+        window.openAdminModal = openAdminModal;
+        window.closeAdminModal = closeAdminModal;
+        window.updateAnnouncement = updateAnnouncement;
+        window.addAdminAnnouncementPost = addAdminAnnouncementPost;
+        window.mockDeleteDatabase = mockDeleteDatabase;
     </script>
 </body>
 </html>
