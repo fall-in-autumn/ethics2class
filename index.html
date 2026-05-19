@@ -1107,59 +1107,15 @@
                 <input type="text" id="login-username" placeholder="이름을 입력하세요 (예: 홍길동)" class="w-full bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
             </div>
 
+            <!-- 로그인 모달에 관리자 코드 입력칸 추가 -->
+            <div id="admin-code-wrap" class="space-y-1.5 hidden">
+                <label class="text-[11px] font-bold text-slate-600 block">관리자 코드</label>
+                <input type="password" id="admin-code" placeholder="관리자 코드 입력" class="w-full bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
+            </div>
+
             <!-- Submit Button -->
             <button onclick="submitLogin()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-md shadow-emerald-100">
                 로그인 완료
-            </button>
-        </div>
-    </div>
-
-    <!-- Interactive Admin Control Modal -->
-    <div id="admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[1000] hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100 animate-fade-in space-y-6">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 class="text-base font-extrabold text-indigo-950 flex items-center gap-2">
-                    <i class="fa-solid fa-toolbox text-indigo-600"></i> 도덕 배움터 관리자 컨트롤 센터
-                </h3>
-                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <!-- Announcement Management (Realtime Sync) -->
-            <div class="space-y-2">
-                <label class="text-xs font-extrabold text-slate-700 block">
-                    <i class="fa-solid fa-bullhorn text-indigo-500 mr-1.5"></i>학급 실시간 상단 공지사항 제어
-                </label>
-                <p class="text-[11px] text-slate-400 leading-relaxed">최상단 안내 배너에 노출될 내용을 수정합니다. 전 학급 브라우저에 실시간 반영됩니다.</p>
-                <div class="flex gap-2">
-                    <input type="text" id="admin-announcement-input" placeholder="새 학급 공지사항을 입력하세요..." class="flex-grow bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-indigo-500">
-                    <button onclick="updateAnnouncement()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 rounded-xl transition-all shrink-0">변경</button>
-                </div>
-            </div>
-
-            <!-- Quick Admin Tool Actions -->
-            <div class="space-y-3">
-                <h4 class="text-xs font-extrabold text-slate-700"><i class="fa-solid fa-bolt text-indigo-500 mr-1.5"></i>도덕 교실 일괄 제어 도구</h4>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button onclick="addAdminAnnouncementPost()" class="p-3 bg-indigo-50 hover:bg-indigo-100/70 border border-indigo-100 rounded-xl text-left transition-all">
-                        <span class="block font-bold text-xs text-indigo-950">📢 교사 공식 알림 등록</span>
-                        <span class="block text-[10px] text-slate-500 mt-1">실시간 토론방 최상단에 교사용 수업 가이드를 일괄 전파합니다.</span>
-                    </button>
-                    <button onclick="mockDeleteDatabase()" class="p-3 bg-rose-50 hover:bg-rose-100/70 border border-rose-100 rounded-xl text-left transition-all">
-                        <span class="block font-bold text-xs text-rose-950">🧹 토론 정화 주의 배포</span>
-                        <span class="block text-[10px] text-slate-500 mt-1">학급 토론방에 부적절한 언행 삼가 요청 시스템 공지를 전송합니다.</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Connection Status -->
-            <div class="bg-slate-50 p-4 rounded-2xl flex items-center justify-between">
-                <div>
-                    <h5 class="font-bold text-xs text-slate-800">에듀테크 학습 플랫폼 연동</h5>
-                    <p class="text-[10px] text-slate-400 mt-0.5">실시간 클라우드 DB 통신 상태 정상</p>
-                </div>
-                <span class="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-black animate-pulse flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> LIVE SYNCED
-                </span>
             </div>
         </div>
     </div>
@@ -1246,17 +1202,14 @@
                 db = getFirestore(appInstance);
                 auth = getAuth(appInstance);
 
-                // 1. 페이지 시작 시 onAuthStateChanged 등록
                 onAuthStateChanged(auth, async (user) => {
                     if (!user) {
-                        // 비로그인 UI 대응: 변수 및 스토리지 비로그인 세션 전향
                         userId = null;
                         currentUser = null;
                         localStorage.removeItem('ethicsUser');
                         updateAuthUI();
                         renderFallbackComments();
 
-                        // RULE 3: 사전 인증 획득을 통한 안전한 백그라운드 Firestore 준비
                         try {
                             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                                 await signInWithCustomToken(auth, __initial_auth_token);
@@ -1267,16 +1220,16 @@
                             console.warn("Silent background authentication failed: ", authErr);
                         }
                     } else {
-                        // 로그인 성공 및 세션 보존 시: role 조회 단계로 이동
                         userId = user.uid;
                         console.log("Authenticated with user identity: " + userId);
                         
-                        // [권한 에러 방지] 서브컬렉션이 아닌 단일 유저 루트 문서에서 일괄 데이터를 안전하게 로드합니다.
                         try {
                             const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
                             const docSnap = await getDoc(userDocRef);
+                            // 로그아웃 버튼을 명시적으로 누른 상태인지 검증합니다.
+                            const isExplicitLogout = localStorage.getItem('explicitLogout') === 'true';
 
-                            if (docSnap.exists()) {
+                            if (docSnap.exists() && !isExplicitLogout) {
                                 const data = docSnap.data();
                                 currentUser = {
                                     name: data.name,
@@ -1284,15 +1237,13 @@
                                 };
                                 localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
                                 
-                                // 체크리스트 상태가 데이터베이스에 저장되어 있으면 UI에 함께 바인딩
                                 if (data.checklist) {
                                     applyChecklistToUI(data.checklist);
                                     localStorage.setItem('ethicsChecklist', JSON.stringify(data.checklist));
                                 }
                             } else {
-                                // 데이터베이스가 비어있을 경우 로컬 스토리지에 백업된 데이터로 복구 진행
                                 const savedUser = localStorage.getItem('ethicsUser');
-                                if (savedUser) {
+                                if (savedUser && !isExplicitLogout) {
                                     currentUser = JSON.parse(savedUser);
                                     await setDoc(userDocRef, {
                                         name: currentUser.name,
@@ -1306,14 +1257,13 @@
                         } catch (err) {
                             console.warn("Profile fetch failed, using local fallback:", err);
                             const savedUser = localStorage.getItem('ethicsUser');
-                            if (savedUser) {
+                            if (savedUser && localStorage.getItem('explicitLogout') !== 'true') {
                                 currentUser = JSON.parse(savedUser);
                             } else {
                                 currentUser = null;
                             }
                         }
 
-                        // UI 갱신 및 데이터 동기화 파이프라인 진행
                         updateAuthUI();
                         setupRealtimeDiscussion();
                         setupRealtimeAnnouncement();
@@ -1384,6 +1334,8 @@
         async function toggleAuth() {
             if (currentUser) {
                 currentUser = null;
+                // 명시적 로그아웃 상태임을 브라우저에 표시합니다.
+                localStorage.setItem('explicitLogout', 'true');
                 localStorage.removeItem('ethicsUser');
                 localStorage.removeItem('ethicsChecklist');
                 
@@ -1393,9 +1345,8 @@
                     } catch (err) {
                         console.error("Firebase Auth sign-out error:", err);
                     }
-                } else {
-                    updateAuthUI();
                 }
+                updateAuthUI();
                 showToast("로그아웃 완료", "안전하게 로그아웃 되었습니다.", "success");
             } else {
                 openLoginModal();
@@ -1406,6 +1357,8 @@
             document.getElementById('login-modal').classList.remove('hidden');
             document.getElementById('login-modal').classList.add('flex');
             document.getElementById('login-username').value = '';
+            const adminCodeInput = document.getElementById('admin-code');
+            if (adminCodeInput) adminCodeInput.value = '';
             selectLoginRole('student');
         }
 
@@ -1418,13 +1371,16 @@
             selectedRole = role;
             const studentBtn = document.getElementById('role-student-btn');
             const adminBtn = document.getElementById('role-admin-btn');
+            const adminCodeWrap = document.getElementById('admin-code-wrap');
 
             if (role === 'student') {
                 studentBtn.className = "py-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xs font-bold flex flex-col items-center gap-1.5 transition-all";
                 adminBtn.className = "py-3 rounded-xl border border-slate-200 text-slate-500 text-xs font-medium hover:border-emerald-500 hover:text-emerald-600 flex flex-col items-center gap-1.5 transition-all";
+                if (adminCodeWrap) adminCodeWrap.classList.add('hidden');
             } else {
                 adminBtn.className = "py-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xs font-bold flex flex-col items-center gap-1.5 transition-all";
                 studentBtn.className = "py-3 rounded-xl border border-slate-200 text-slate-500 text-xs font-medium hover:border-emerald-500 hover:text-emerald-600 flex flex-col items-center gap-1.5 transition-all";
+                if (adminCodeWrap) adminCodeWrap.classList.remove('hidden');
             }
         }
 
@@ -1433,6 +1389,17 @@
             const name = nameInput.value.trim();
             const displayName = name || (selectedRole === 'student' ? '도덕인' : '이도덕 선생님');
 
+            if (selectedRole === 'admin') {
+                const adminCodeInput = document.getElementById('admin-code');
+                const adminCode = adminCodeInput ? adminCodeInput.value.trim() : '';
+                if (adminCode !== 'ethics2026') {
+                    showToast("인증 실패", "관리자 코드가 올바르지 않습니다. (기본 코드: ethics2026)", "warning");
+                    return;
+                }
+            }
+
+            // 새롭게 로그인하는 시점이므로 로그아웃 플래그를 완전히 제거합니다.
+            localStorage.removeItem('explicitLogout');
             currentUser = {
                 name: displayName,
                 role: selectedRole
