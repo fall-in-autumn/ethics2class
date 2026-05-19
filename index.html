@@ -1168,7 +1168,7 @@
     <!-- ==================== FIREBASE MODULE & SCRIPTS ==================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Environment fallback logic to merge injected Firebase credentials
@@ -1241,58 +1241,92 @@
         window.onload = async function() {
             generateNewQuote();
             calculateEstimator();
-            
-            // Check for locally cached profile
-            const savedUser = localStorage.getItem('ethicsUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-            }
 
             try {
                 appInstance = initializeApp(firebaseConfig);
                 db = getFirestore(appInstance);
                 auth = getAuth(appInstance);
 
-                // RULE 3: Secure Auth session before making any database queries
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // 1. 페이지 시작 시 onAuthStateChanged 등록
+                onAuthStateChanged(auth, async (user) => {
+                    if (!user) {
+                        // 비로그인 UI 대응: 변수 및 스토리지 비로그인 세션 전향
+                        userId = null;
+                        currentUser = null;
+                        localStorage.removeItem('ethicsUser');
+                        updateAuthUI();
+                        renderFallbackComments();
+
+                        // RULE 3: 사전 인증 획득을 통한 안전한 백그라운드 Firestore 준비
+                        try {
+                            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                                await signInWithCustomToken(auth, __initial_auth_token);
+                            } else {
+                                await signInAnonymously(auth);
+                            }
+                        } catch (authErr) {
+                            console.warn("Silent background authentication failed: ", authErr);
+                        }
+                    } else {
+                        // 로그인 성공 및 세션 보존 시: role 조회 단계로 이동
+                        userId = user.uid;
+                        console.log("Authenticated with user identity: " + userId);
+                        await lookupUserRoleAndProfile(userId);
+                    }
+                });
             } catch (err) {
                 console.warn("Auth initialization warning, falling back to local-only store: ", err);
-            }
-
-            // Bind to state listener
-            if (auth) {
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        console.log("Authenticated with complete user identity: " + userId);
-                        
-                        // Sync profile to database if logged in
-                        if (currentUser) {
-                            await syncProfileToDatabase();
-                        }
-                        
-                        // Activate real-time database feeds
-                        setupRealtimeDiscussion();
-                        setupRealtimeAnnouncement();
-                        loadChecklistFromDatabase();
-                    } else {
-                        userId = null;
-                    }
-                    updateAuthUI();
-                });
-            } else {
                 updateAuthUI();
                 renderFallbackComments();
             }
         }
 
+        // Firestore 및 로컬 캐시를 대조하여 사용자 역할 및 프로필 정보 조회 단계 수행
+        async function lookupUserRoleAndProfile(uid) {
+            if (!db) return;
+            try {
+                // RULE 1: 사용자 고유 프라이빗 경로 탐색
+                const profileDocRef = doc(db, 'artifacts', appId, 'users', uid, 'profile', 'info');
+                const docSnap = await getDoc(profileDocRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    currentUser = {
+                        name: data.name,
+                        role: data.role || 'student'
+                    };
+                    localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
+                    console.log("Firestore profile synchronized successfully:", currentUser);
+                } else {
+                    // 데이터베이스에 유저 프로필이 없을 경우 로컬 캐시 조회 시도
+                    const savedUser = localStorage.getItem('ethicsUser');
+                    if (savedUser) {
+                        currentUser = JSON.parse(savedUser);
+                        await syncProfileToDatabase(); // 유저 데이터를 DB와 원격 동기화
+                    } else {
+                        currentUser = null;
+                    }
+                }
+            } catch (err) {
+                console.warn("Profile database lookup failed, falling back to local cache:", err);
+                const savedUser = localStorage.getItem('ethicsUser');
+                if (savedUser) {
+                    currentUser = JSON.parse(savedUser);
+                } else {
+                    currentUser = null;
+                }
+            }
+
+            // UI 갱신 및 실시간 스트림 파이프라인 개시
+            updateAuthUI();
+            setupRealtimeDiscussion();
+            setupRealtimeAnnouncement();
+            loadChecklistFromDatabase();
+        }
+
         // Setup Firestore profiles
         async function syncProfileToDatabase() {
-            if (!userId || !db) return;
+            if (!userId || !db || !currentUser) return;
             try {
                 // RULE 1: Use private document path
                 const profileDocRef = doc(db, 'artifacts', appId, 'users', userId, 'profile', 'info');
@@ -1307,11 +1341,21 @@
         }
 
         // --- AUTH INTERACTIVITY ---
-        function toggleAuth() {
+        async function toggleAuth() {
             if (currentUser) {
                 currentUser = null;
                 localStorage.removeItem('ethicsUser');
-                updateAuthUI();
+                localStorage.removeItem('ethicsChecklist');
+                
+                if (auth) {
+                    try {
+                        await signOut(auth);
+                    } catch (err) {
+                        console.error("Firebase Auth sign-out error:", err);
+                    }
+                } else {
+                    updateAuthUI();
+                }
                 showToast("로그아웃 완료", "안전하게 로그아웃 되었습니다.", "success");
             } else {
                 openLoginModal();
