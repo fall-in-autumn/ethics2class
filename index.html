@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바른 삶, 따뜻한 소통 - 중학교 2학년 도덕</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Noto Sans KR, Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons for beautiful visual design -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            background: #f8fafc;
+        }
+        /* Custom smooth transition */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+        /* Confetti Canvas styling */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Top Banner & Notification Bar -->
+    <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-xs md:text-sm py-2 px-4 text-center font-medium shadow-inner relative overflow-hidden">
+        <span class="inline-block animate-pulse mr-2">📢</span> 
+        [공지] 이번 주 수행평가 '나만의 도덕적 신조 만들기' 마감 기한을 확인하세요!
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 backdrop-blur-md bg-white/90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo / Title -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-md shadow-emerald-100/50">
+                    <i class="fa-solid fa-leaf text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-tight text-slate-900 leading-none">도덕 <span class="text-emerald-600">II</span></h1>
+                    <span class="text-[10px] text-slate-500 font-semibold tracking-wider">중학교 2학년 과정</span>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation Tabs -->
+            <nav class="hidden md:flex items-center space-x-1">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-xl text-sm font-bold text-emerald-600 bg-emerald-50 transition-all duration-200">
+                    <i class="fa-solid fa-house mr-1.5"></i> 홈으로
+                </button>
+                <button onclick="switchTab('theory')" id="nav-theory" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-emerald-600 hover:bg-slate-50 transition-all duration-200">
+                    <i class="fa-solid fa-book-open mr-1.5"></i> 이론 수업
+                </button>
+                <button onclick="switchTab('activity')" id="nav-activity" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-emerald-600 hover:bg-slate-50 transition-all duration-200">
+                    <i class="fa-solid fa-users-rectangle mr-1.5"></i> 활동 수업
+                </button>
+                <button onclick="switchTab('assessment')" id="nav-assessment" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-emerald-600 hover:bg-slate-50 transition-all duration-200">
+                    <i class="fa-solid fa-clipboard-check mr-1.5"></i> 수행평가
+                </button>
+            </nav>
+
+            <!-- Secondary Action (E-Book Link / Mock) -->
+            <div class="flex items-center space-x-3">
+                <a href="#quick-quiz" onclick="switchTab('theory'); setTimeout(() => document.getElementById('quiz-box').scrollIntoView({behavior: 'smooth'}), 100)" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-600 transition-all text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> 오늘의 퀴즈
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ==================== TAB 1: HOME ==================== -->
+        <section id="tab-home" class="tab-content active space-y-8">
+            <!-- Hero Dashboard Banner -->
+            <div class="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 rounded-3xl text-white p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                <!-- Decorative background shapes -->
+                <div class="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-60 h-60 bg-teal-500/10 rounded-full blur-2xl"></div>
+                
+                <div class="relative z-10 max-w-2xl">
+                    <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">2026학년도 도덕 배움터</span>
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mt-4 leading-tight">생각의 깊이를 더하고<br><span class="text-emerald-400">삶을 실천하는</span> 도덕 시간!</h2>
+                    <p class="text-slate-300 text-sm sm:text-base mt-4 font-normal leading-relaxed">자신을 성찰하고, 타인을 존중하며, 더불어 살아가는 정의로운 사회를 만드는 지혜를 배워갑니다. 오늘 무엇을 경험해보고 싶나요?</p>
+                </div>
+
+                <!-- Fast Travel Buttons -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 pt-6 border-t border-slate-800 relative z-10">
+                    <button onclick="switchTab('theory')" class="group flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-500/50 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center space-x-3 text-left">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                                <i class="fa-solid fa-book text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-white group-hover:text-emerald-300 transition-colors">이론 수업</h4>
+                                <p class="text-[11px] text-slate-400">교과 진도 및 핵심 개념</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+
+                    <button onclick="switchTab('activity')" class="group flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-teal-500/50 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center space-x-3 text-left">
+                            <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center">
+                                <i class="fa-solid fa-puzzle-piece text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-white group-hover:text-teal-300 transition-colors">활동 수업</h4>
+                                <p class="text-[11px] text-slate-400">토론 마당 및 카드 분류</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+
+                    <button onclick="switchTab('assessment')" class="group flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-amber-500/50 rounded-2xl transition-all duration-300">
+                        <div class="flex items-center space-x-3 text-left">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                                <i class="fa-solid fa-star text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-white group-hover:text-amber-300 transition-colors">수행평가</h4>
+                                <p class="text-[11px] text-slate-400">일정, 루브릭 및 자가 채점</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Welcome Column Layout: Interactive Quote and Quick Progress Tracker -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Quote Generator (Interactive Widget) -->
+                <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between min-h-[250px] relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 opacity-5 pointer-events-none transform translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-500">
+                        <i class="fa-solid fa-quote-right text-[200px] text-emerald-950"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                                <i class="fa-solid fa-quote-left"></i> 오늘의 도덕 한마디
+                            </span>
+                            <button onclick="generateNewQuote()" class="text-slate-400 hover:text-emerald-600 transition-colors text-xs flex items-center gap-1">
+                                <i class="fa-solid fa-arrows-rotate animate-spin-hover"></i> 명언 새로고침
+                            </button>
+                        </div>
+                        <div class="min-h-[100px] flex flex-col justify-center">
+                            <p id="quote-text" class="text-lg sm:text-xl font-medium text-slate-800 leading-relaxed italic">"성찰하지 않는 삶은 살 가치가 없다."</p>
+                            <span id="quote-author" class="text-sm text-slate-500 mt-2 font-bold block text-right">- 소크라테스 (Socrates) -</span>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4 mt-4 flex items-center justify-between">
+                        <p class="text-xs text-slate-400">수업 시작 전 가슴 깊이 새겨보세요.</p>
+                        <button onclick="copyQuote()" class="text-slate-500 hover:text-slate-800 text-xs flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> 복사하기
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Learning Progress Tracker -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-bullseye text-emerald-500"></i> 학습 여정 진도율
+                            </h3>
+                            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">1학기 과정</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-4 leading-relaxed">우리가 함께 걸어온 도덕 수업의 마일스톤입니다. 현재까지 학습 상황을 확인해 보세요.</p>
+                        
+                        <!-- Progress Bars -->
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                    <span>대단원 Ⅰ. 자신과의 관계</span>
+                                    <span>70% 완료</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-500 h-full rounded-full" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                    <span>대단원 Ⅱ. 타인과의 관계</span>
+                                    <span>40% 완료</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-emerald-400 h-full rounded-full" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                    <span>대단원 Ⅳ. 자연과의 관계</span>
+                                    <span>10% 진행</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-teal-400 h-full rounded-full" style="width: 10%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
+                        <span class="text-[11px] text-slate-400">최근 업데이트: 오늘 1교시</span>
+                        <span class="text-xs font-bold text-slate-700">종합 진도율: 40%</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Today's Lesson Quick Info & Notification Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Lesson Notice Card -->
+                <div class="bg-emerald-50/50 rounded-3xl p-6 border border-emerald-100/70">
+                    <h3 class="text-base font-bold text-emerald-950 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-emerald-600"></i> 오늘의 도덕 미션
+                    </h3>
+                    <ul class="space-y-3.5 text-slate-700 text-sm">
+                        <li class="flex gap-2">
+                            <span class="text-emerald-600 font-extrabold text-base leading-none">•</span>
+                            <span><strong>배움 목표:</strong> 도덕적 성찰의 올바른 방법을 학습하고 내면화하기</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-emerald-600 font-extrabold text-base leading-none">•</span>
+                            <span><strong>사전 과제:</strong> 활동지 3페이지 '일일 가치 일기' 완성해 오기</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-emerald-600 font-extrabold text-base leading-none">•</span>
+                            <span><strong>준비물:</strong> 필기도구, 생각 나눔 공책 (스마트패드 지참 적극 권장)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Ethics Board Q&A Preview -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-comments text-amber-500"></i> 우리들의 한 줄 도덕 고민
+                        </h3>
+                        <span class="text-xs text-slate-400">전체보기 <i class="fa-solid fa-chevron-right text-[9px]"></i></span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-slate-50 rounded-xl text-xs hover:bg-slate-100/80 transition-all cursor-pointer">
+                            <div class="flex justify-between font-bold text-slate-700 mb-1">
+                                <span>Q. 친구의 험담을 듣게 되었는데 어떡하죠?</span>
+                                <span class="text-slate-400 font-normal">방금 전</span>
+                            </div>
+                            <p class="text-slate-500 line-clamp-1">동조하기도 싫고 고자질하는 것도 마음에 걸려요...</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl text-xs hover:bg-slate-100/80 transition-all cursor-pointer">
+                            <div class="flex justify-between font-bold text-slate-700 mb-1">
+                                <span>Q. 공정하다는 것은 무엇을 의미하나요?</span>
+                                <span class="text-slate-400 font-normal">2시간 전</span>
+                            </div>
+                            <p class="text-slate-500 line-clamp-1">단순하게 똑같이 나누는 것이 항상 정답일까요?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: THEORY CLASS ==================== -->
+        <section id="tab-theory" class="tab-content space-y-8">
+            <!-- Theory Introduction -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
+                <div class="max-w-3xl">
+                    <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase">이론 수업 (Theory Class)</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 mb-4">도덕 2 디지털 단원 아카이브</h2>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        교과서 목차에 맞춘 핵심 배움터입니다. 각 대단원 하위의 중단원 카드를 클릭하여 상세 소단원의 구성과 교과서 위치를 한눈에 살펴보세요. 학기별 과정이 정교하게 디자인되어 있습니다.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Syllabus Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left column: Curriculum Tree with 1학기 vs 2학기 -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-list-ol text-emerald-600"></i> 중학 도덕 Ⅱ 전체 목차
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-white border border-slate-100 px-2.5 py-1 rounded-lg">전체 4대단원</span>
+                    </div>
+
+                    <!-- ==================== 대단원 I ==================== -->
+                    <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-50 pb-3">
+                            <h4 class="font-extrabold text-slate-900 flex items-center gap-2 text-sm sm:text-base">
+                                <span class="w-2.5 h-5 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-md inline-block"></span>
+                                Ⅰ. 자신과의 관계
+                            </h4>
+                            <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">1/2학기 공존</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <!-- 중단원 1. 옳고 그름의 분별 [1학기 - 활성] -->
+                            <div class="bg-white border border-slate-100 hover:border-emerald-200 rounded-2xl overflow-hidden transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer bg-slate-50/50 hover:bg-slate-50" onclick="toggleChapter('unit-1-1')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 font-extrabold rounded-xl flex items-center justify-center text-sm shadow-sm">1-1</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-900 text-sm">옳고 그름의 분별</h5>
+                                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.5 rounded-full border border-emerald-200">1학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">분별의 기준, 상상력, 도덕적 추론 및 비판적 사고</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-1-1-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-1-1-body" class="hidden px-4 pb-4 border-t border-slate-50 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>01 옳고 그름의 기준은 무엇일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">12p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>02 도덕적 상상력은 어떤 역할을 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">16p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>03 도덕적 추론은 어떻게 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">20p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>04 비판적 사고는 어떻게 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">24p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 중단원 2. 삶과 죽음의 의미 [2학기 - 비활성] -->
+                            <div class="bg-slate-100/40 border border-slate-200/60 rounded-2xl overflow-hidden opacity-75 hover:opacity-100 transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50" onclick="toggleChapter('unit-1-2')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-slate-200/80 text-slate-500 font-extrabold rounded-xl flex items-center justify-center text-sm">1-2</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-600 text-sm">삶과 죽음의 의미</h5>
+                                                <span class="bg-slate-100 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-slate-200">2학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">삶의 가치, 소중함, 죽음에 대한 올바른 대처</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-1-2-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-1-2-body" class="hidden px-4 pb-4 border-t border-slate-100 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>01 삶이 소중한 이유는 무엇일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">34p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>02 죽음을 어떻게 대해야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">38p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>03 어떻게 의미 있는 삶을 살 수 있을까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">42p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 중단원 3. 마음의 평화 [2학기 - 비활성] -->
+                            <div class="bg-slate-100/40 border border-slate-200/60 rounded-2xl overflow-hidden opacity-75 hover:opacity-100 transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50" onclick="toggleChapter('unit-1-3')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-slate-200/80 text-slate-500 font-extrabold rounded-xl flex items-center justify-center text-sm">1-3</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-600 text-sm">마음의 평화</h5>
+                                                <span class="bg-slate-100 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-slate-200">2학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">고통의 근원과 이해, 성찰을 통한 극복과 자비</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-1-3-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-1-3-body" class="hidden px-4 pb-4 border-t border-slate-100 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>01 고통은 어디에서 오는 것일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">52p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>02 마음의 평화는 어떻게 이룰 수 있을까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">56p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 중단원 4. 직업의 가치와 직업윤리 [2학기 - 비활성] -->
+                            <div class="bg-slate-100/40 border border-slate-200/60 rounded-2xl overflow-hidden opacity-75 hover:opacity-100 transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50" onclick="toggleChapter('unit-1-4')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-slate-200/80 text-slate-500 font-extrabold rounded-xl flex items-center justify-center text-sm">1-4</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-600 text-sm">직업의 가치와 직업윤리</h5>
+                                                <span class="bg-slate-100 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-slate-200">2학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">진로 및 직업 선택 기준, 올바른 직업 정신</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-1-4-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-1-4-body" class="hidden px-4 pb-4 border-t border-slate-100 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>01 직업이란 무엇이고 어떤 직업을 선택해야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">66p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>02 직업적 삶에서 무엇을 지켜야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">70p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== 대단원 II ==================== -->
+                    <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-50 pb-3">
+                            <h4 class="font-extrabold text-slate-900 flex items-center gap-2 text-sm sm:text-base">
+                                <span class="w-2.5 h-5 bg-gradient-to-b from-teal-500 to-indigo-600 rounded-md inline-block"></span>
+                                Ⅱ. 타인과의 관계
+                            </h4>
+                            <span class="text-[10px] text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full font-bold">1/2학기 공존</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <!-- 중단원 1. 인간관계의 중요성 [1학기 - 활성] -->
+                            <div class="bg-white border border-slate-100 hover:border-emerald-200 rounded-2xl overflow-hidden transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer bg-slate-50/50 hover:bg-slate-50" onclick="toggleChapter('unit-2-1')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 font-extrabold rounded-xl flex items-center justify-center text-sm shadow-sm">2-1</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-900 text-sm">인간관계의 중요성</h5>
+                                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.5 rounded-full border border-emerald-200">1학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">상호의존적 존재로서의 인간, 관계적 도덕성</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-2-1-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-2-1-body" class="hidden px-4 pb-4 border-t border-slate-50 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>01 우리는 왜 관계적 존재일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">84p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>02 다른 사람과 함께 살아가려면 어떻게 해야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">88p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 중단원 2. 갈등과 폭력의 평화적 해결 [1학기 - 활성] -->
+                            <div class="bg-white border border-slate-100 hover:border-emerald-200 rounded-2xl overflow-hidden transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer bg-slate-50/50 hover:bg-slate-50" onclick="toggleChapter('unit-2-2')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 font-extrabold rounded-xl flex items-center justify-center text-sm shadow-sm">2-2</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-900 text-sm">갈등과 폭력의 평화적 해결</h5>
+                                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.5 rounded-full border border-emerald-200">1학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">갈등 해결 메커니즘, 비폭력 비폭력주의, 평화</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-2-2-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-2-2-body" class="hidden px-4 pb-4 border-t border-slate-50 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>01 갈등의 원인은 무엇이고 어떻게 해결해야 할까?</span>
+                                            <div class="flex items-center gap-2">
+                                                <a href="./02/02/201.html" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10.5px] font-extrabold px-3 py-1 rounded-lg transition-all duration-200 shadow-sm shadow-emerald-100 flex items-center gap-1">
+                                                    <i class="fa-solid fa-graduation-cap"></i> 갈등 학습하기
+                                                </a>
+                                                <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">100p</span>
+                                            </div>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>02 폭력이란 무엇인가?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">104p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>03 폭력에 평화적으로 대처하려면 어떻게 해야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">108p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 중단원 3. 성의 도덕적 의미 [2학기 - 비활성] -->
+                            <div class="bg-slate-100/40 border border-slate-200/60 rounded-2xl overflow-hidden opacity-75 hover:opacity-100 transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50" onclick="toggleChapter('unit-2-3')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-slate-200/80 text-slate-500 font-extrabold rounded-xl flex items-center justify-center text-sm">2-3</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-600 text-sm">성의 도덕적 의미</h5>
+                                                <span class="bg-slate-100 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-slate-200">2학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">양성 평등, 청소년기 성윤리 및 존중</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-2-3-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-2-3-body" class="hidden px-4 pb-4 border-t border-slate-100 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>01 성을 어떻게 바라보아야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">118p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>02 청소년기의 바람직한 성윤리는 무엇일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">122p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>03 성에 대한 편견과 차별을 극복하려면 어떻게 해야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">126p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== 대단원 III ==================== -->
+                    <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-50 pb-3">
+                            <h4 class="font-extrabold text-slate-900 flex items-center gap-2 text-sm sm:text-base">
+                                <span class="w-2.5 h-5 bg-gradient-to-b from-teal-500 to-indigo-600 rounded-md inline-block"></span>
+                                Ⅲ. 사회·공동체와의 관계
+                            </h4>
+                            <span class="text-[10px] text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full font-bold">1/2학기 공존</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <!-- 중단원 1. 정의로운 사회의 모습 [2학기 - 비활성] -->
+                            <div class="bg-slate-100/40 border border-slate-200/60 rounded-2xl overflow-hidden opacity-75 hover:opacity-100 transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50" onclick="toggleChapter('unit-3-1')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-slate-100 text-slate-400 font-extrabold rounded-xl flex items-center justify-center text-sm">3-1</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-600 text-sm">정의로운 사회의 모습</h5>
+                                                <span class="bg-slate-100 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-slate-200">2학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">정의의 기준, 인권 및 제도적 보장과 실천 노력</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-3-1-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-3-1-body" class="hidden px-4 pb-4 border-t border-slate-100 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>01 정의로운 사회는 어떤 모습일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">138p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>02 정의로운 사회를 실현하기 위해 무엇이 필요할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">142p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>03 정의로운 사회를 실현하려면 어떤 노력을 해야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">146p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 중단원 2. 국가와 시민의 바람직한 관계 [2학기 - 비활성] -->
+                            <div class="bg-slate-100/40 border border-slate-200/60 rounded-2xl overflow-hidden opacity-75 hover:opacity-100 transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50" onclick="toggleChapter('unit-3-2')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-slate-100 text-slate-400 font-extrabold rounded-xl flex items-center justify-center text-sm">3-2</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-600 text-sm">국가와 시민의 바람직한 관계</h5>
+                                                <span class="bg-slate-100 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-slate-200">2학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">국가의 윤리적 의무와 바람직한 시민상</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-3-2-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-3-2-body" class="hidden px-4 pb-4 border-t border-slate-100 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>01 국가의 올바른 역할은 무엇일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">156p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>02 시민은 어떤 존재일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">160p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>03 국가와 시민의 바람직한 관계는 무엇일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">164p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 중단원 3. 세계시민으로서 우리가 할 수 있는 일 [1학기 - 활성] -->
+                            <div class="bg-white border border-slate-100 hover:border-emerald-200 rounded-2xl overflow-hidden transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer bg-slate-50/50 hover:bg-slate-50" onclick="toggleChapter('unit-3-3')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 font-extrabold rounded-xl flex items-center justify-center text-sm shadow-sm">3-3</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-900 text-sm">세계시민으로서 우리가 할 수 있는 일</h5>
+                                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.5 rounded-full border border-emerald-200">1학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">글로벌 연대 및 인류 보편적 도덕 가치 실천</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-3-3-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-3-3-body" class="hidden px-4 pb-4 border-t border-slate-50 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>01 세계시민이란 어떤 사람일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">174p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>02 세계시민이 직면한 도덕 문제는 무엇일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">178p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>03 세계시민으로서 우리는 무엇을 할 수 있을까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">182p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 중단원 4. 과학기술 시대의 윤리적 쟁점 [2학기 - 비활성] -->
+                            <div class="bg-slate-100/40 border border-slate-200/60 rounded-2xl overflow-hidden opacity-75 hover:opacity-100 transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50" onclick="toggleChapter('unit-3-4')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-slate-100 text-slate-400 font-extrabold rounded-xl flex items-center justify-center text-sm">3-4</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-600 text-sm">과학기술 시대의 윤리적 쟁점</h5>
+                                                <span class="bg-slate-100 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-slate-200">2학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">인공지능, 생명 복제 및 네티켓 윤리</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-3-4-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-3-4-body" class="hidden px-4 pb-4 border-t border-slate-100 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>01 과학기술의 유용성과 문제점은 무엇일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">192p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>02 과학기술과 관련된 윤리적 쟁점은 무엇일까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">196p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50/50 rounded-xl">
+                                            <span class="text-slate-500"><i class="fa-regular fa-folder text-slate-400 mr-2"></i>03 과학기술을 활용할 때 어떤 자세를 지녀야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md">200p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== 대단원 IV ==================== -->
+                    <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-50 pb-3">
+                            <h4 class="font-extrabold text-slate-900 flex items-center gap-2 text-sm sm:text-base">
+                                <span class="w-2.5 h-5 bg-gradient-to-b from-emerald-500 to-emerald-700 rounded-md inline-block"></span>
+                                Ⅳ. 자연과의 관계
+                            </h4>
+                            <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">1학기 전용</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <!-- 중단원 인간과 자연 [1학기 - 활성] -->
+                            <div class="bg-white border border-slate-100 hover:border-emerald-200 rounded-2xl overflow-hidden transition-all duration-300">
+                                <div class="p-4 flex justify-between items-center cursor-pointer bg-slate-50/50 hover:bg-slate-50" onclick="toggleChapter('unit-4-1')">
+                                    <div class="flex items-center space-x-3.5">
+                                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 font-extrabold rounded-xl flex items-center justify-center text-sm shadow-sm">4-1</div>
+                                        <div>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <h5 class="font-bold text-slate-900 text-sm">인간과 자연</h5>
+                                                <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.5 rounded-full border border-emerald-200">1학기</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">자연관의 변화, 인간 중심주의 vs 생태 중심주의</p>
+                                        </div>
+                                    </div>
+                                    <i id="unit-4-1-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                                </div>
+                                <div id="unit-4-1-body" class="hidden px-4 pb-4 border-t border-slate-50 bg-white">
+                                    <ul class="space-y-2 mt-3">
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>01 자연을 어떻게 바라보아야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">212p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>02 환경 문제는 누가 책임져야 할까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">216p</span>
+                                        </li>
+                                        <li class="flex justify-between items-center text-xs p-2.5 bg-slate-50 rounded-xl hover:bg-slate-100/50 transition-colors">
+                                            <span class="text-slate-700 font-medium"><i class="fa-regular fa-folder-open text-emerald-500 mr-2"></i>03 환경 위기는 어떻게 극복할 수 있을까?</span>
+                                            <span class="text-slate-400 text-[10px] bg-white px-2 py-0.5 border border-slate-200/60 rounded-md shadow-3xs">220p</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right column: Interactive Quiz Widget -->
+                <div id="quiz-box" class="bg-slate-900 text-white rounded-3xl p-6 shadow-xl flex flex-col justify-between self-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-[10px] uppercase tracking-wider font-extrabold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-1 rounded">미니 퀴즈</span>
+                            <h4 class="font-bold text-sm text-slate-300">배움 점검하기</h4>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black leading-snug" id="quiz-question">"남에게 대접받고자 하는 대로 대접하라"라는 황금률을 제시한 철학자는?</h3>
+                        
+                        <!-- Quiz Options -->
+                        <div class="space-y-2 mt-5" id="quiz-options-container">
+                            <button onclick="checkQuizAnswer(0)" class="w-full text-left p-3.5 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500 hover:bg-emerald-950/20 text-xs sm:text-sm font-semibold transition-all duration-200 flex justify-between items-center group">
+                                <span>1) 소크라테스 (Socrates)</span>
+                                <i class="fa-regular fa-circle text-slate-500 group-hover:text-emerald-400"></i>
+                            </button>
+                            <button onclick="checkQuizAnswer(1)" class="w-full text-left p-3.5 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500 hover:bg-emerald-950/20 text-xs sm:text-sm font-semibold transition-all duration-200 flex justify-between items-center group">
+                                <span>2) 아리스토텔레스 (Aristotle)</span>
+                                <i class="fa-regular fa-circle text-slate-500 group-hover:text-emerald-400"></i>
+                            </button>
+                            <button onclick="checkQuizAnswer(2)" class="w-full text-left p-3.5 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500 hover:bg-emerald-950/20 text-xs sm:text-sm font-semibold transition-all duration-200 flex justify-between items-center group">
+                                <span>3) 칸트 (Kant)</span>
+                                <i class="fa-regular fa-circle text-slate-500 group-hover:text-emerald-400"></i>
+                            </button>
+                            <button onclick="checkQuizAnswer(3)" class="w-full text-left p-3.5 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500 hover:bg-emerald-950/20 text-xs sm:text-sm font-semibold transition-all duration-200 flex justify-between items-center group">
+                                <span>4) 밀 (Mill)</span>
+                                <i class="fa-regular fa-circle text-slate-500 group-hover:text-emerald-400"></i>
+                            </button>
+                        </div>
+
+                        <!-- Feedback Message -->
+                        <div id="quiz-feedback" class="mt-4 p-3.5 rounded-xl hidden text-xs font-semibold">
+                        </div>
+                    </div>
+
+                    <!-- Next Quiz Control -->
+                    <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span id="quiz-progress-text" class="text-xs text-slate-500">문제 1 / 3</span>
+                        <button id="next-quiz-btn" onclick="nextQuizQuestion()" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 hidden items-center gap-1 transition-colors">
+                            다음 문제 풀기 <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 3: ACTIVITY CLASS ==================== -->
+        <section id="tab-activity" class="tab-content space-y-8">
+            <!-- Activity Intro -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
+                <div class="max-w-3xl">
+                    <span class="text-xs font-bold text-teal-600 bg-teal-50 px-3 py-1 rounded-full uppercase">활동 수업 (Activity Class)</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 mb-4">함께 탐구하고 체험하는 도덕 활동터</h2>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        교실 토론, 가치 정렬, 탐구 조별 과제 등 직접 몸과 머리로 학습하는 다양한 활동 자료가 마련되어 있습니다. 아래의 미니 실습형 활동에 즉석으로 참여해보세요.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive Activity: Value Card Sorting Game -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Sorting Game Area -->
+                <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-shapes text-teal-500"></i> 도덕적 가치 카드 분류 게임
+                            </h3>
+                            <button onclick="resetSortingGame()" class="text-xs text-slate-400 hover:text-teal-600 flex items-center gap-1">
+                                <i class="fa-solid fa-arrows-rotate"></i> 초기화
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-6">아래 제시된 카드를 알맞은 영역(자신과의 관계, 타인과의 관계, 사회/국가와의 관계)으로 알맞게 정렬해 보세요!</p>
+
+                        <!-- Card to Sort -->
+                        <div class="bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-100 rounded-2xl p-6 text-center max-w-sm mx-auto shadow-sm mb-8" id="card-to-sort-container">
+                            <span class="text-xs font-bold text-teal-600 uppercase tracking-widest bg-white px-2.5 py-1 rounded-full shadow-sm">도덕적 키워드</span>
+                            <h4 id="sorting-card-text" class="text-2xl font-black text-slate-900 mt-4 mb-2">효도 (孝道)</h4>
+                            <p id="sorting-card-desc" class="text-xs text-slate-500">부모님을 정성껏 모시고 받드는 도리</p>
+                        </div>
+
+                        <!-- Drop Targets -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <button onclick="dropCard('self')" class="p-4 bg-slate-50 hover:bg-teal-50 hover:border-teal-400 border border-slate-200 border-dashed rounded-2xl transition-all duration-200 text-center flex flex-col items-center justify-center gap-2 min-h-[120px]">
+                                <i class="fa-solid fa-user text-lg text-teal-600"></i>
+                                <span class="font-bold text-xs text-slate-800">자신과의 관계</span>
+                                <span class="text-[10px] text-slate-400">양심, 자아, 성찰</span>
+                            </button>
+                            <button onclick="dropCard('others')" class="p-4 bg-slate-50 hover:bg-teal-50 hover:border-teal-400 border border-slate-200 border-dashed rounded-2xl transition-all duration-200 text-center flex flex-col items-center justify-center gap-2 min-h-[120px]">
+                                <i class="fa-solid fa-user-group text-lg text-teal-600"></i>
+                                <span class="font-bold text-xs text-slate-800">타인과의 관계</span>
+                                <span class="text-[10px] text-slate-400">배려, 존중, 화합</span>
+                            </button>
+                            <button onclick="dropCard('society')" class="p-4 bg-slate-50 hover:bg-teal-50 hover:border-teal-400 border border-slate-200 border-dashed rounded-2xl transition-all duration-200 text-center flex flex-col items-center justify-center gap-2 min-h-[120px]">
+                                <i class="fa-solid fa-globe text-lg text-teal-600"></i>
+                                <span class="font-bold text-xs text-slate-800">사회와의 관계</span>
+                                <span class="text-[10px] text-slate-400">정의, 평화, 공동체</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game Progress and Feedback -->
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+                        <span id="sorting-progress-text" class="text-xs text-slate-500">진행률: 1 / 5</span>
+                        <div id="sorting-game-feedback" class="text-xs font-bold text-slate-600">정렬해 보세요!</div>
+                    </div>
+                </div>
+
+                <!-- Discussion Board Card -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-hand-fist text-rose-500"></i> 오늘의 찬반 교실 토론
+                            </h3>
+                            <span class="text-xs text-rose-600 bg-rose-50 px-2 py-1 rounded-md font-semibold">토론 중</span>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-800 mb-2">논제: "AI(인공지능)에게도 도덕적 지위나 권리를 부여할 수 있는가?"</h4>
+                        <p class="text-xs text-slate-500 mb-4 leading-relaxed">인간만이 가질 수 있는 도덕적 자격을 AI에게 주는 것은 어떤 도덕적 딜레마를 낳을지 의견을 공유해 봅시다.</p>
+
+                        <!-- Live Comments Mock Flow -->
+                        <div class="space-y-3 max-h-[220px] overflow-y-auto mb-4 pr-1" id="comments-box">
+                            <div class="bg-slate-50 rounded-xl p-3 text-xs">
+                                <div class="flex justify-between font-bold text-slate-700 mb-1">
+                                    <span>김*은 (찬성)</span>
+                                    <span class="text-[10px] text-slate-400 font-normal">3분 전</span>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed">자율적 결정을 내리고 고통이나 가치 판단을 유사하게 수행한다면 그에 상응하는 도덕적 고려를 해야 한다고 생각해요.</p>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-3 text-xs">
+                                <div class="flex justify-between font-bold text-slate-700 mb-1">
+                                    <span>박*민 (반대)</span>
+                                    <span class="text-[10px] text-slate-400 font-normal">15분 전</span>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed">아무리 똑똑해도 AI는 감정이나 참된 도덕적 지성이 없으므로 주체가 될 수 없다고 봅니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Discussion Input -->
+                    <div class="border-t border-slate-100 pt-4">
+                        <div class="flex gap-2">
+                            <input type="text" id="comment-input" placeholder="내 의견 적기 (150자 내)..." class="flex-grow bg-slate-50 text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-teal-500">
+                            <button onclick="postComment()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-4 rounded-xl transition-colors">등록</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 4: ASSESSMENT ==================== -->
+        <section id="tab-assessment" class="tab-content space-y-8">
+            <!-- Assessment Intro -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
+                <div class="max-w-3xl">
+                    <span class="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase">수행평가 (Performance Assessment)</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 mb-4">내 생각의 깊이만큼 정당하게 평가받기</h2>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        중학교 2학년 도덕 수행평가 상세 가이드와 평가 기준표입니다. 자가 진단 시뮬레이터를 통해 내 감점 요인을 미리 없애고 우수한 결과를 얻어가세요!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive Assessment Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Score Estimator Tool -->
+                <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-amber-500"></i> 수행평가 자가 채점기
+                        </h3>
+                        <span class="text-xs text-slate-400">내 예상 등급을 즉시 확인해 보세요</span>
+                    </div>
+
+                    <!-- Sliders & Checkboxes for Grading Rubric -->
+                    <div class="space-y-6">
+                        <!-- Metric 1: 주제 연계성 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-sm font-bold text-slate-700">1. 도덕적 주제와의 깊은 연계성 (최대 10점)</label>
+                                <span id="metric-1-val" class="text-sm font-black text-amber-600">10점</span>
+                            </div>
+                            <input type="range" id="metric-1" min="2" max="10" step="2" value="10" oninput="calculateEstimator()" class="w-full accent-amber-500 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-slate-400 mt-1">도덕적 키워드(존중, 정의, 성찰 등) 중 하나 이상을 확실하게 녹여냈는지 파악합니다.</p>
+                        </div>
+
+                        <!-- Metric 2: 창의성 및 전달력 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-sm font-bold text-slate-700">2. 생각의 독창성 및 명확한 의견 (최대 10점)</label>
+                                <span id="metric-2-val" class="text-sm font-black text-amber-600">10점</span>
+                            </div>
+                            <input type="range" id="metric-2" min="2" max="10" step="2" value="10" oninput="calculateEstimator()" class="w-full accent-amber-500 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-slate-400 mt-1">단순 사실 나열을 넘어 자신의 가치관을 주관 있게 표현했는지를 봅니다.</p>
+                        </div>
+
+                        <!-- Metric 3: 마감 기한 및 성실성 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-sm font-bold text-slate-700">3. 제출 규정 및 성실성 (최대 10점)</label>
+                                <span id="metric-3-val" class="text-sm font-black text-amber-600">10점</span>
+                            </div>
+                            <input type="range" id="metric-3" min="2" max="10" step="2" value="10" oninput="calculateEstimator()" class="w-full accent-amber-500 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer">
+                            <p class="text-[11px] text-slate-400 mt-1">정해진 제출 포맷, 자수 제한 및 제출 마감 일정을 준수했는지에 따릅니다.</p>
+                        </div>
+                    </div>
+
+                    <!-- Calculated Output View -->
+                    <div class="bg-amber-50 rounded-2xl p-5 mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 border border-amber-100">
+                        <div class="text-center sm:text-left">
+                            <h4 class="font-bold text-slate-900 text-sm">예측 등급 요약</h4>
+                            <p class="text-xs text-slate-500 mt-1">모든 항목은 학업성적관리위원회의 기준에 기초합니다.</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="text-center">
+                                <div class="text-[10px] text-slate-400 font-bold uppercase">총 점수</div>
+                                <div class="text-2xl font-black text-amber-600" id="estimator-total">30 / 30 점</div>
+                            </div>
+                            <div class="w-px h-10 bg-slate-200"></div>
+                            <div class="text-center">
+                                <div class="text-[10px] text-slate-400 font-bold uppercase">예상 등급</div>
+                                <div class="text-2xl font-black text-amber-600" id="estimator-grade">A (우수)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assessment List & Submissions Checklist -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-square-check text-emerald-500"></i> 나의 과제 관리 체크리스트
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">제출하기 전 반드시 확인하여 사소한 실수를 방지해 보세요. 체크 상태는 기억됩니다.</p>
+
+                        <!-- Checklist Items with Local Saving -->
+                        <div class="space-y-3.5">
+                            <label class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100/70 rounded-xl cursor-pointer transition-colors">
+                                <input type="checkbox" id="check-1" onchange="saveChecklist()" class="mt-0.5 rounded text-amber-500 focus:ring-amber-400 h-4.5 w-4.5 border-slate-300">
+                                <div>
+                                    <span class="font-bold text-xs text-slate-800 block">제출자 명칭 및 학번 작성 확인</span>
+                                    <span class="text-[10px] text-slate-400">예: 2학년 3반 14번 홍길동</span>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100/70 rounded-xl cursor-pointer transition-colors">
+                                <input type="checkbox" id="check-2" onchange="saveChecklist()" class="mt-0.5 rounded text-amber-500 focus:ring-amber-400 h-4.5 w-4.5 border-slate-300">
+                                <div>
+                                    <span class="font-bold text-xs text-slate-800 block">핵심 도덕 단어 1개 이상 사용</span>
+                                    <span class="text-[10px] text-slate-400">정의, 인권, 성찰, 존중 등</span>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-3 p-3 bg-slate-50 hover:bg-slate-100/70 rounded-xl cursor-pointer transition-colors">
+                                <input type="checkbox" id="check-3" onchange="saveChecklist()" class="mt-0.5 rounded text-amber-500 focus:ring-amber-400 h-4.5 w-4.5 border-slate-300">
+                                <div>
+                                    <span class="font-bold text-xs text-slate-800 block">원고 규격 분량 준수</span>
+                                    <span class="text-[10px] text-slate-400">공백 포함 500자 ~ 700자 이내</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-100 pt-4 mt-6 text-center">
+                        <button onclick="simulateSubmission()" class="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-3 px-4 rounded-xl transition-all duration-200 shadow-md">
+                            수행평가 체크 완료 확인
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Brand Info -->
+                <div class="md:col-span-2 space-y-3">
+                    <div class="flex items-center space-x-2 text-white">
+                        <i class="fa-solid fa-leaf text-emerald-400"></i>
+                        <span class="font-black text-lg">중학 도덕 II 배움터</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
+                        본 사이트는 중학교 2학년 도덕 교과 수업의 편의와 흥미를 유발하기 위해 제작된 미래형 디지털 에듀테크 포털입니다. 지식을 넘어 실천하는 지성인으로 도약합니다.
+                    </p>
+                </div>
+                <!-- Nav Links -->
+                <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3">빠른 링크</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" onclick="switchTab('home')" class="hover:text-white transition-colors">홈으로 돌아가기</a></li>
+                        <li><a href="#" onclick="switchTab('theory')" class="hover:text-white transition-colors">이론 단원 진도 정보</a></li>
+                        <li><a href="#" onclick="switchTab('activity')" class="hover:text-white transition-colors">교실 찬반 토론 공간</a></li>
+                        <li><a href="#" onclick="switchTab('assessment')" class="hover:text-white transition-colors">수행평가 제출 가이드</a></li>
+                    </ul>
+                </div>
+                <!-- Contact info / Tech details -->
+                <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3">수업 문의</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><i class="fa-solid fa-user-tie text-[10px] mr-1.5"></i> 담당 교사: 이도덕 선생님</li>
+                        <li><i class="fa-solid fa-location-dot text-[10px] mr-1.5"></i> 교무실: 2층 예체능교과실</li>
+                        <li><i class="fa-solid fa-envelope text-[10px] mr-1.5"></i> 이메일: teacher_ethics@school.edu</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs">
+                <p>&copy; 2026 중학교 도덕 배움터. All rights reserved.</p>
+                <div class="flex space-x-4 mt-4 sm:mt-0">
+                    <span class="hover:text-white transition-colors cursor-pointer">이용약관</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">개인정보처리방침</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JS Logic -->
+    <script>
+        // Quotes Database for Interactive Quotes Box
+        const quotes = [
+            { text: "성찰하지 않는 삶은 살 가치가 없다.", author: "소크라테스 (Socrates)" },
+            { text: "인(仁)은 사람다운 마음이며, 의(義)는 사람이 마땅히 가야 할 바른 길이다.", author: "맹자 (Mencius)" },
+            { text: "네 의지의 준칙이 항상 동시에 보편적 입법의 원리로서 타당할 수 있도록 행위하라.", author: "임마누엘 칸트 (Immanuel Kant)" },
+            { text: "우리가 가진 부나 권력보다 중요한 것은 우리 내면에 있는 정의와 도덕성이다.", author: "마틴 루터 킹 (Martin Luther King Jr.)" },
+            { text: "세상을 바꾸고 싶다면, 나 자신부터 바른 방향으로 변해야 한다.", author: "간디 (Mahatma Gandhi)" },
+            { text: "도덕이란 단순히 올바름이 아니라, 타인에 대한 한없는 연민과 공감이다.", author: "아르투어 쇼펜하우어 (Arthur Schopenhauer)" },
+            { text: "남이 나에게 베풀어 주기를 바라는 대로 남에게 베풀어라.", author: "신약성경 (Golden Rule)" }
+        ];
+
+        // Core Quiz Database
+        const quizQuestions = [
+            {
+                question: "\"남에게 대접받고자 하는 대로 대접하라\"라는 보편적 도덕 가치를 뜻하는 법칙은?",
+                options: ["1) 무지의 장막", "2) 수오지심의 원리", "3) 황금률 (Golden Rule)", "4) 공리주의의 원칙"],
+                answer: 2, // Option 3 is correct
+                feedback: "정답입니다! 황금률은 고대부터 동서양을 막론하고 인간 행동의 보편적 기준으로 널리 인정받아 왔습니다."
+            },
+            {
+                question: "정의론으로 유명하며, 공정한 사회적 조건에 합의하기 위해 가상의 계약자들이 '자신의 지위를 모르는 상태'인 '무지의 장막'을 제안한 철학자는?",
+                options: ["1) 존 롤스 (John Rawls)", "2) 존 스튜어트 밀 (John Stuart Mill)", "3) 토마스 홉스 (Thomas Hobbes)", "4) 이황 (Lee Hwang)"],
+                answer: 0, // Option 1 is correct
+                feedback: "정답입니다! 존 롤스는 자신이 유리할지 불리할지 모르는 가상의 상태를 뜻하는 '무지의 장막'을 고안하여 공정한 원칙을 탐구했습니다."
+            },
+            {
+                question: "타인의 처지를 미루어 상대의 입장을 헤아리고 공감하는 태도를 가리키는 고사성어는?",
+                options: ["1) 결초보은 (結草報恩)", "2) 역지사지 (易地思之)", "3) 각주구검 (刻舟求劍)", "4) 수오지심 (羞惡之心)"],
+                answer: 1, // Option 2 is correct
+                feedback: "정답입니다! 역지사지는 '처지를 바꾸어 생각한다'라는 뜻으로 도덕적 소통과 배려의 가장 핵심적인 실천 방향입니다."
+            }
+        ];
+
+        // Sorting Game Database
+        const valueCards = [
+            { word: "효도 (孝道)", desc: "부모님을 정성껏 모시고 받드는 참된 도리", category: "others" },
+            { word: "도덕적 성찰", desc: "나의 말과 행동이 올바른지 마음을 돌이켜 살핌", category: "self" },
+            { word: "사회 정의", desc: "공동체의 구성원들이 공평하게 대우받도록 보장함", category: "society" },
+            { word: "역지사지", desc: "상대방의 입장에서 그의 감정과 어려움을 공감함", category: "others" },
+            { word: "자아 정체성", desc: "나는 누구이며 어떤 존재가 될 것인지 올바르게 자각함", category: "self" },
+            { word: "시민 불복종", desc: "정의롭지 않은 법에 대해 비폭력적인 방식으로 준수를 거부함", category: "society" }
+        ];
+
+        // App States
+        let currentQuizIndex = 0;
+        let selectedQuizAnswer = null;
+        let currentSortingIndex = 0;
+        let sortedCount = 0;
+
+        // On Load initialization
+        window.onload = function() {
+            generateNewQuote();
+            loadChecklist();
+            calculateEstimator();
+        }
+
+        // --- NAVIGATION TABS LOGIC ---
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show current tab
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if(targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            // Update Nav button styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-emerald-600 hover:bg-slate-50 transition-all duration-200";
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if(activeBtn) {
+                activeBtn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-bold text-emerald-600 bg-emerald-50 transition-all duration-200";
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- HOMEPAGE INTERACTION: QUOTE GENERATOR ---
+        function generateNewQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quoteTextEl = document.getElementById('quote-text');
+            const quoteAuthorEl = document.getElementById('quote-author');
+
+            // Apply quick animation effect
+            quoteTextEl.style.opacity = '0';
+            quoteAuthorEl.style.opacity = '0';
+
+            setTimeout(() => {
+                quoteTextEl.innerText = `"${quotes[randomIndex].text}"`;
+                quoteAuthorEl.innerText = `- ${quotes[randomIndex].author} -`;
+                quoteTextEl.style.opacity = '1';
+                quoteAuthorEl.style.opacity = '1';
+            }, 250);
+        }
+
+        function copyQuote() {
+            const textToCopy = `${document.getElementById('quote-text').innerText} ${document.getElementById('quote-author').innerText}`;
+            
+            // Clipboard Copy Guardrail (using dynamic text areas)
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = textToCopy;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            showToast("Copied!", "명언이 클립보드에 복사되었습니다.", "success");
+        }
+
+        // --- THEORY CLASS INTERACTION: SYLLABUS ACCORDION ---
+        function toggleChapter(chId) {
+            const body = document.getElementById(`${chId}-body`);
+            const icon = document.getElementById(`${chId}-icon`);
+
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                body.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        // --- THEORY CLASS INTERACTION: MINI QUIZ ---
+        function checkQuizAnswer(selectedIndex) {
+            if(selectedQuizAnswer !== null) return; // Answer already locked in
+            
+            selectedQuizAnswer = selectedIndex;
+            const currentQuiz = quizQuestions[currentQuizIndex];
+            const feedbackBox = document.getElementById('quiz-feedback');
+            const optionsContainer = document.getElementById('quiz-options-container');
+            const buttons = optionsContainer.getElementsByTagName('button');
+
+            feedbackBox.classList.remove('hidden');
+
+            if(selectedIndex === currentQuiz.answer) {
+                // Correct
+                buttons[selectedIndex].classList.add('border-emerald-500', 'bg-emerald-950/40', 'text-emerald-300');
+                buttons[selectedIndex].querySelector('i').className = "fa-solid fa-circle-check text-emerald-400";
+                
+                feedbackBox.className = "mt-4 p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs font-semibold";
+                feedbackBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-emerald-400"></i> 참 잘했습니다! ${currentQuiz.feedback}`;
+                
+                triggerConfetti();
+            } else {
+                // Wrong
+                buttons[selectedIndex].classList.add('border-rose-500', 'bg-rose-950/40', 'text-rose-300');
+                buttons[selectedIndex].querySelector('i').className = "fa-solid fa-circle-xmark text-rose-400";
+
+                buttons[currentQuiz.answer].classList.add('border-emerald-500', 'bg-emerald-950/20', 'text-emerald-400');
+                
+                feedbackBox.className = "mt-4 p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300 text-xs font-semibold";
+                feedbackBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1 text-rose-400"></i> 아쉽습니다! 올바른 답은 '${currentQuiz.options[currentQuiz.answer]}' 입니다.`;
+            }
+
+            // Show "Next" Button
+            document.getElementById('next-quiz-btn').classList.remove('hidden');
+            document.getElementById('next-quiz-btn').classList.add('flex');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            if(currentQuizIndex >= quizQuestions.length) {
+                // End of quiz cycle - reset
+                currentQuizIndex = 0;
+            }
+
+            selectedQuizAnswer = null;
+            const nextQuiz = quizQuestions[currentQuizIndex];
+
+            // Update HTML Question & Options
+            document.getElementById('quiz-question').innerText = nextQuiz.question;
+            document.getElementById('quiz-progress-text').innerText = `문제 ${currentQuizIndex + 1} / 3`;
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('next-quiz-btn').classList.add('hidden');
+            document.getElementById('next-quiz-btn').classList.remove('flex');
+
+            // Rebuild quiz options
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+            nextQuiz.options.forEach((opt, idx) => {
+                optionsContainer.innerHTML += `
+                    <button onclick="checkQuizAnswer(${idx})" class="w-full text-left p-3.5 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500 hover:bg-emerald-950/20 text-xs sm:text-sm font-semibold transition-all duration-200 flex justify-between items-center group">
+                        <span>${opt}</span>
+                        <i class="fa-regular fa-circle text-slate-500 group-hover:text-emerald-400"></i>
+                    </button>
+                `;
+            });
+        }
+
+        // --- ACTIVITY CLASS INTERACTION: VALUE CARD SORTING GAME ---
+        function dropCard(categoryName) {
+            const currentCard = valueCards[currentSortingIndex];
+            const feedbackText = document.getElementById('sorting-game-feedback');
+            
+            if(currentCard.category === categoryName) {
+                feedbackText.className = "text-xs font-bold text-teal-600 animate-pulse";
+                feedbackText.innerHTML = `<i class="fa-solid fa-circle-check"></i> 올바른 선택입니다! '${currentCard.word}'은(는) 이 영역이 맞습니다.`;
+                triggerConfetti();
+            } else {
+                feedbackText.className = "text-xs font-bold text-rose-500";
+                feedbackText.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 잘못된 위치입니다. 가치를 더 심도 있게 다듬어 봐요!`;
+            }
+
+            // Move to next card
+            setTimeout(() => {
+                currentSortingIndex++;
+                if(currentSortingIndex >= valueCards.length) {
+                    currentSortingIndex = 0;
+                    showToast("분류 완료!", "모든 도덕 가치 단어를 올바르게 성찰하고 재배열했습니다.", "success");
+                }
+                
+                document.getElementById('sorting-progress-text').innerText = `진행률: ${currentSortingIndex + 1} / ${valueCards.length}`;
+                document.getElementById('sorting-card-text').innerText = valueCards[currentSortingIndex].word;
+                document.getElementById('sorting-card-desc').innerText = valueCards[currentSortingIndex].desc;
+                feedbackText.className = "text-xs font-bold text-slate-600";
+                feedbackText.innerText = "어느 영역에 해당할까요?";
+            }, 1800);
+        }
+
+        function resetSortingGame() {
+            currentSortingIndex = 0;
+            document.getElementById('sorting-progress-text').innerText = `진행률: 1 / ${valueCards.length}`;
+            document.getElementById('sorting-card-text').innerText = valueCards[0].word;
+            document.getElementById('sorting-card-desc').innerText = valueCards[0].desc;
+            document.getElementById('sorting-game-feedback').className = "text-xs font-bold text-slate-600";
+            document.getElementById('sorting-game-feedback').innerText = "분류를 시작하세요!";
+        }
+
+        // --- ACTIVITY CLASS INTERACTION: CLASS DISCUSSION FORUM ---
+        function postComment() {
+            const commentInput = document.getElementById('comment-input');
+            const commentText = commentInput.value.trim();
+            if(!commentText) return;
+
+            const commentsBox = document.getElementById('comments-box');
+            const newComment = document.createElement('div');
+            newComment.className = "bg-teal-50/50 rounded-xl p-3 text-xs border border-teal-100/50 animate-fade-in";
+            newComment.innerHTML = `
+                <div class="flex justify-between font-bold text-slate-700 mb-1">
+                    <span>나 (학생)</span>
+                    <span class="text-[10px] text-slate-400 font-normal">방금 전</span>
+                </div>
+                <p class="text-slate-600 leading-relaxed">${escapeHtml(commentText)}</p>
+            `;
+            
+            commentsBox.insertBefore(newComment, commentsBox.firstChild);
+            commentInput.value = '';
+            commentsBox.scrollTop = 0;
+            showToast("등록 완료!", "토론 의견이 모의 게시판에 전송되었습니다.", "success");
+        }
+
+        // --- ASSESSMENT INTERACTION: ESTIMATOR & CHECKLIST ---
+        function calculateEstimator() {
+            const m1 = parseInt(document.getElementById('metric-1').value);
+            const m2 = parseInt(document.getElementById('metric-2').value);
+            const m3 = parseInt(document.getElementById('metric-3').value);
+
+            // Update Label texts
+            document.getElementById('metric-1-val').innerText = `${m1}점`;
+            document.getElementById('metric-2-val').innerText = `${m2}점`;
+            document.getElementById('metric-3-val').innerText = `${m3}점`;
+
+            // Calculate score
+            const total = m1 + m2 + m3;
+            document.getElementById('estimator-total').innerText = `${total} / 30 점`;
+
+            // Calculate grade
+            const gradeEl = document.getElementById('estimator-grade');
+            if(total >= 26) {
+                gradeEl.innerText = "A (우수)";
+                gradeEl.className = "text-2xl font-black text-emerald-600";
+            } else if(total >= 20) {
+                gradeEl.innerText = "B (보통)";
+                gradeEl.className = "text-2xl font-black text-amber-500";
+            } else {
+                gradeEl.innerText = "C (노력필요)";
+                gradeEl.className = "text-2xl font-black text-rose-500";
+            }
+        }
+
+        // Checklist local storage save & load
+        function saveChecklist() {
+            const checks = {
+                check1: document.getElementById('check-1').checked,
+                check2: document.getElementById('check-2').checked,
+                check3: document.getElementById('check-3').checked
+            };
+            localStorage.setItem('ethicsChecklist', JSON.stringify(checks));
+        }
+
+        function loadChecklist() {
+            const saved = localStorage.getItem('ethicsChecklist');
+            if(saved) {
+                const checks = JSON.parse(saved);
+                document.getElementById('check-1').checked = checks.check1;
+                document.getElementById('check-2').checked = checks.check2;
+                document.getElementById('check-3').checked = checks.check3;
+            }
+        }
+
+        function simulateSubmission() {
+            const check1 = document.getElementById('check-1').checked;
+            const check2 = document.getElementById('check-2').checked;
+            const check3 = document.getElementById('check-3').checked;
+
+            if (check1 && check2 && check3) {
+                showToast("검수 완료!", "모든 요건이 완벽하게 갖추어졌습니다! 수행평가를 안심하고 제출하세요.", "success");
+                triggerConfetti();
+            } else {
+                showToast("주의!", "일부 검수 항목이 누락되었습니다. 마감 조건들을 꼼꼼하게 다시 챙겨주세요.", "warning");
+            }
+        }
+
+        // --- HELPER UTILITY: TOAST COMPONENT (Replacer of alerts) ---
+        function showToast(title, desc, type) {
+            // Check if any existing toast exists, remove it
+            const existingToast = document.getElementById('toast-box');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.id = "toast-box";
+            toast.className = `fixed bottom-4 right-4 z-[9999] p-4 rounded-2xl shadow-xl border flex items-start gap-3 max-w-sm transition-all duration-300 transform translate-y-2 opacity-0 bg-white`;
+            
+            let iconMarkup = '';
+            if(type === 'success') {
+                toast.classList.add('border-emerald-200');
+                iconMarkup = `<div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-circle-check"></i></div>`;
+            } else {
+                toast.classList.add('border-amber-200');
+                iconMarkup = `<div class="w-8 h-8 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-circle-exclamation"></i></div>`;
+            }
+
+            toast.innerHTML = `
+                ${iconMarkup}
+                <div>
+                    <h5 class="font-bold text-xs text-slate-900">${title}</h5>
+                    <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">${desc}</p>
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            // Hide and clear
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // --- HELPER UTILITY: CONFETTI EFFECT ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confetti = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function triggerConfetti() {
+            const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#14b8a6'];
+            for (let i = 0; i < 60; i++) {
+                confetti.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + Math.random() * 20,
+                    size: Math.random() * 6 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedX: Math.random() * 4 - 2,
+                    speedY: -(Math.random() * 10 + 10),
+                    gravity: 0.35,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 6 - 3
+                });
+            }
+            if(confetti.length === 60) {
+                requestAnimationFrame(updateConfetti);
+            }
+        }
+
+        function updateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < confetti.length; i++) {
+                const c = confetti[i];
+                c.x += c.speedX;
+                c.y += c.speedY;
+                c.speedY += c.gravity;
+                c.rotation += c.rotationSpeed;
+
+                ctx.save();
+                ctx.translate(c.x, c.y);
+                ctx.rotate((c.rotation * Math.PI) / 180);
+                ctx.fillStyle = c.color;
+                ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size);
+                ctx.restore();
+
+                // Remove out of screen elements
+                if (c.y > canvas.height + 20) {
+                    confetti.splice(i, 1);
+                    i--;
+                }
+            }
+            if (confetti.length > 0) {
+                requestAnimationFrame(updateConfetti);
+            }
+        }
+
+        // Escape helper
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
