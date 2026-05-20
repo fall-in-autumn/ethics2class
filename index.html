@@ -1103,6 +1103,16 @@
                 <label class="text-[11px] font-bold text-slate-600 block">이름 / 닉네임</label>
                 <input type="text" id="login-username" placeholder="이름을 입력하세요 (예: 홍길동)" class="w-full bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
             </div>
+            
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-600 block">이메일</label>
+                <input type="email" id="login-email" placeholder="example@email.com" class="w-full bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-600 block">비밀번호</label>
+                <input type="password" id="login-password" placeholder="비밀번호 입력" class="w-full bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
+            </div>
 
             <!-- 로그인 모달에 관리자 코드 입력칸 추가 -->
             <div id="admin-code-wrap" class="space-y-1.5 hidden">
@@ -1391,7 +1401,10 @@
             document.getElementById('login-modal').classList.add('flex');
             document.getElementById('login-username').value = '';
             const adminCodeInput = document.getElementById('admin-code');
-            if (adminCodeInput) adminCodeInput.value = '';
+            const emailInput = document.getElementById('login-email');
+            const passwordInput = document.getElementById('login-password');
+            if (emailInput) emailInput.value = '';
+            if (passwordInput) passwordInput.value = '';
             selectLoginRole('student');
         }
 
@@ -1420,6 +1433,13 @@
 
         async function submitLogin() {
             const name = document.getElementById('login-username').value.trim();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            if (!email || !password) {
+                showToast("입력 필요", "이메일과 비밀번호를 모두 입력해주세요.", "warning");
+                return;
+            }   
+            
             const displayName = name || (selectedRole === 'student' ? '학생' : '도덕 선생님');
 
             localStorage.removeItem('explicitLogout');
