@@ -1166,9 +1166,14 @@
 
     <!-- ==================== FIREBASE MODULE & SCRIPTS ==================== -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import {
+          getAuth,
+          signInAnonymously,
+          signInWithCustomToken,
+          onAuthStateChanged,
+          signOut,
+          signInWithEmailAndPassword,
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         // Environment fallback logic to merge injected Firebase credentials
         const firebaseConfig = typeof __firebase_config !== 'undefined'
@@ -1435,10 +1440,18 @@
             const name = document.getElementById('login-username').value.trim();
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
+            
             if (!email || !password) {
-                showToast("입력 필요", "이메일과 비밀번호를 모두 입력해주세요.", "warning");
+              showToast("입력 필요", "이메일과 비밀번호를 입력해주세요.", "warning");
+              return;
+            }  
+
+            try {
+              await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+              showToast("로그인 실패", "이메일 또는 비밀번호를 확인해주세요.", "warning");
                 return;
-            }   
+              }
             
             const displayName = name || (selectedRole === 'student' ? '학생' : '도덕 선생님');
 
