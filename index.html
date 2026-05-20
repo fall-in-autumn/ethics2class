@@ -1449,9 +1449,10 @@
             try {
               await signInWithEmailAndPassword(auth, email, password);
             } catch (err) {
-              showToast("로그인 실패", "이메일 또는 비밀번호를 확인해주세요.", "warning");
-                return;
-              }
+              console.error("LOGIN_ERR:", err.code, err.message);
+              showToast("로그인 실패", `${err.code}`, "warning");
+              return;
+            }
             
             const displayName = name || (selectedRole === 'student' ? '학생' : '도덕 선생님');
 
