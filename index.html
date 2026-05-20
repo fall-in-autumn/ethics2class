@@ -1168,6 +1168,8 @@
           signOut,
           signInWithEmailAndPassword,
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Environment fallback logic to merge injected Firebase credentials
         const firebaseConfig = typeof __firebase_config !== 'undefined'
@@ -1415,8 +1417,10 @@
         function selectLoginRole(role) {
             selectedRole = role;
             const wrap = document.getElementById('admin-code-wrap');
-            if (role === 'admin') wrap.classList.remove('hidden');
-            else wrap.classList.add('hidden');
+            if (wrap) {
+              if (role === 'admin') wrap.classList.remove('hidden');
+              else wrap.classList.add('hidden');
+            }
 
             // 기존 버튼 스타일 코드는 그대로 유지
             const studentBtn = document.getElementById('role-student-btn');
