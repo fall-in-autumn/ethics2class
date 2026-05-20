@@ -1226,9 +1226,6 @@
         let selectedQuizAnswer = null;
         let currentSortingIndex = 0;
 
-        // 임시 예시: 실제 서비스는 하드코딩 말고 서버/Cloud Function 검증 권장
-        const ADMIN_CODE = "teacher-2026";
-
         // Initialize Firebase on document load
         window.onload = async function() {
             generateNewQuote();
@@ -1359,7 +1356,6 @@
                 const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
                 await setDoc(userDocRef, {
                     name: currentUser.name,
-                    role: currentUser.role,
                     updatedAt: new Date().toISOString()
                 }, { merge: true });
             } catch (err) {
@@ -1424,27 +1420,50 @@
 
         async function submitLogin() {
             const name = document.getElementById('login-username').value.trim();
-            const displayName = name || (selectedRole === 'student' ? '도덕인' : '이도덕 선생님');
-
-            // 관리자 로그인 차단 로직
-            if (selectedRole === 'admin') {
-                const code = document.getElementById('admin-code').value.trim();
-                if (code !== ADMIN_CODE) {
-                    showToast("로그인 거부", "관리자 인증에 실패했습니다.", "warning");
-                    return; // 로그인 중단
-                }
-            }
+            const displayName = name || (selectedRole === 'student' ? '학생' : '도덕 선생님');
 
             localStorage.removeItem('explicitLogout');
-            currentUser = { name: displayName, role: selectedRole };
-            localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
 
-            closeLoginModal();
-            triggerConfetti();
-            if (userId) await syncProfileToDatabase();
-            updateAuthUI();
-            showToast("로그인 성공!", `${currentUser.name}님, 로그인되었습니다.`, "success");
+            let safeRole = 'student';
+
+            // 관리자 로그인 차단 로직
+            if (db && userId) {
+                try {
+                const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
+                const docSnap = await getDoc(userDocRef);
+
+                const storedRole = (docSnap.exists() && docSnap.data().role === 'admin') ? 'admin' : 'student';
+        
+                if (selectedRole === 'admin' && storedRole !== 'admin') {
+                    showToast("로그인 거부", "관리자 권한 계정만 관리자 모드로 로그인할 수 있습니다.", "warning");
+                    return;
+                }
+                safeRole = storedRole;
+                    
+                await setDoc(userDocRef, {
+                    name: displayName,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+            } catch (err) {
+                console.warn("Role verification failed:", err);
+                if (selectedRole === 'admin') {
+                    showToast("로그인 거부", "관리자 권한 확인에 실패했습니다.", "warning");
+                    return;
+                }
+            }
+        } else if (selectedRole === 'admin') {
+            showToast("로그인 거부", "관리자 권한 확인을 위한 인증 상태가 필요합니다.", "warning");
+            return;
         }
+
+        currentUser = { name: displayName, role: safeRole };
+        localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
+
+        closeLoginModal();
+        triggerConfetti();
+        updateAuthUI();
+        showToast("로그인 성공!", `${currentUser.name}님, 로그인되었습니다.`, "success");
+    }
 
         // --- ADMIN MODULE CONTROLS (Firestore Integration) ---
         function openAdminModal() {
