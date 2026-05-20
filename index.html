@@ -297,7 +297,6 @@
             </div>
         </section>
 
-
         <!-- ==================== TAB 2: THEORY CLASS ==================== -->
         <section id="tab-theory" class="tab-content space-y-8">
             <!-- Theory Introduction -->
@@ -816,7 +815,6 @@
             </div>
         </section>
 
-
         <!-- ==================== TAB 3: ACTIVITY CLASS ==================== -->
         <section id="tab-activity" class="tab-content space-y-8">
             <!-- Activity Intro -->
@@ -910,7 +908,6 @@
                 </div>
             </div>
         </section>
-
 
         <!-- ==================== TAB 4: ASSESSMENT ==================== -->
         <section id="tab-assessment" class="tab-content space-y-8">
@@ -1116,6 +1113,43 @@
             <!-- Submit Button -->
             <button onclick="submitLogin()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 rounded-xl transition-all shadow-md shadow-emerald-100">
                 로그인 완료
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin Management Modal (FIXED: Added missing HTML dialog components) -->
+    <div id="admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[1000] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-100 animate-fade-in space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-base font-extrabold text-slate-900">도덕 수업 관리자 메뉴</h3>
+                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">학급 전체에 실시간 공지를 변경하거나 토론방을 모니터링합니다.</p>
+            
+            <!-- Announcement Edit -->
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-600 block">실시간 학급 공지사항 설정</label>
+                <textarea id="admin-announcement-input" placeholder="학급 전체에 표시할 공지 내용을 적어주세요." rows="2" class="w-full bg-slate-50 border border-slate-200 text-xs px-3.5 py-2.5 rounded-xl focus:outline-none focus:border-emerald-500"></textarea>
+                <button onclick="updateAnnouncement()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 rounded-xl transition-all shadow-sm">
+                    공지사항 실시간 반영
+                </button>
+            </div>
+
+            <div class="h-px bg-slate-100 my-2"></div>
+
+            <!-- Discussion Controls -->
+            <div class="space-y-2">
+                <label class="text-[11px] font-bold text-slate-600 block">토론 게시판 관리</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="addAdminAnnouncementPost()" class="py-3 rounded-xl border border-indigo-200 bg-indigo-50 text-indigo-700 text-xs font-bold flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-indigo-100">
+                        <i class="fa-solid fa-bullhorn text-lg"></i>
+                        <span>선생님 공지글 등록</span>
+                    </button>
+                    <button onclick="mockDeleteDatabase()" class="py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-xs font-bold flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-rose-100">
+                        <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                        <span>정화 경고 발송</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1191,6 +1225,9 @@
         let currentQuizIndex = 0;
         let selectedQuizAnswer = null;
         let currentSortingIndex = 0;
+
+        // 임시 예시: 실제 서비스는 하드코딩 말고 서버/Cloud Function 검증 권장
+        const ADMIN_CODE = "teacher-2026";
 
         // Initialize Firebase on document load
         window.onload = async function() {
@@ -1369,52 +1406,44 @@
 
         function selectLoginRole(role) {
             selectedRole = role;
+            const wrap = document.getElementById('admin-code-wrap');
+            if (role === 'admin') wrap.classList.remove('hidden');
+            else wrap.classList.add('hidden');
+
+            // 기존 버튼 스타일 코드는 그대로 유지
             const studentBtn = document.getElementById('role-student-btn');
             const adminBtn = document.getElementById('role-admin-btn');
-            const adminCodeWrap = document.getElementById('admin-code-wrap');
-
             if (role === 'student') {
                 studentBtn.className = "py-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xs font-bold flex flex-col items-center gap-1.5 transition-all";
                 adminBtn.className = "py-3 rounded-xl border border-slate-200 text-slate-500 text-xs font-medium hover:border-emerald-500 hover:text-emerald-600 flex flex-col items-center gap-1.5 transition-all";
-                if (adminCodeWrap) adminCodeWrap.classList.add('hidden');
             } else {
                 adminBtn.className = "py-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-700 text-xs font-bold flex flex-col items-center gap-1.5 transition-all";
                 studentBtn.className = "py-3 rounded-xl border border-slate-200 text-slate-500 text-xs font-medium hover:border-emerald-500 hover:text-emerald-600 flex flex-col items-center gap-1.5 transition-all";
-                if (adminCodeWrap) adminCodeWrap.classList.remove('hidden');
             }
         }
 
         async function submitLogin() {
-            const nameInput = document.getElementById('login-username');
-            const name = nameInput.value.trim();
+            const name = document.getElementById('login-username').value.trim();
             const displayName = name || (selectedRole === 'student' ? '도덕인' : '이도덕 선생님');
 
+            // 관리자 로그인 차단 로직
             if (selectedRole === 'admin') {
-                const adminCodeInput = document.getElementById('admin-code');
-                const adminCode = adminCodeInput ? adminCodeInput.value.trim() : '';
-                if (adminCode !== 'ethics2026') {
-                    showToast("인증 실패", "관리자 코드가 올바르지 않습니다. (기본 코드: ethics2026)", "warning");
-                    return;
+                const code = document.getElementById('admin-code').value.trim();
+                if (code !== ADMIN_CODE) {
+                    showToast("로그인 거부", "관리자 인증에 실패했습니다.", "warning");
+                    return; // 로그인 중단
                 }
             }
 
-            // 새롭게 로그인하는 시점이므로 로그아웃 플래그를 완전히 제거합니다.
             localStorage.removeItem('explicitLogout');
-            currentUser = {
-                name: displayName,
-                role: selectedRole
-            };
-
+            currentUser = { name: displayName, role: selectedRole };
             localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
+
             closeLoginModal();
             triggerConfetti();
-            showToast("로그인 성공!", `${currentUser.name}님, 도덕 배움터 연동이 완료되었습니다.`, "success");
-            
-            // Sync up user credential with Firestore user document
-            if (userId) {
-                await syncProfileToDatabase();
-            }
+            if (userId) await syncProfileToDatabase();
             updateAuthUI();
+            showToast("로그인 성공!", `${currentUser.name}님, 로그인되었습니다.`, "success");
         }
 
         // --- ADMIN MODULE CONTROLS (Firestore Integration) ---
