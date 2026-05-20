@@ -1084,7 +1084,7 @@
                 <h3 class="text-base font-extrabold text-slate-900">도덕 배움터 로그인</h3>
                 <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-500 leading-relaxed">역할을 선택하고 이름을 입력하여 맞춤형 도덕 여정을 시작하세요.</p>
+            <p class="text-xs text-slate-500 leading-relaxed">역할을 선택하고 이메일 정보를 입력하여 맞춤형 도덕 여정을 시작하세요.</p>
             
             <!-- Role Selection Tabs -->
             <div class="grid grid-cols-2 gap-2.5">
@@ -1121,7 +1121,7 @@
         </div>
     </div>
 
-    <!-- Admin Management Modal (FIXED: Added missing HTML dialog components) -->
+    <!-- Admin Management Modal -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[1000] hidden items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-100 animate-fade-in space-y-4">
             <div class="flex justify-between items-center">
@@ -1217,7 +1217,7 @@
             },
             {
                 question: "타인의 처지를 미루어 상대의 입장을 헤아리고 공감하는 태도를 가리키는 고사성어는?",
-                options: ["1) 결초보은 (結草報恩)", "2) 역지사지 (易地思之)", "3) 각주구검 (刻舟求劍)", "4) 수오지심 (羞惡之心)"],
+                options: ["1) 결초보은 (結草報恩)", "2) 역지사지 (易地사지)", "3) 각주구검 (刻舟求劍)", "4) 수오지심 (羞惡之心)"],
                 answer: 1,
                 feedback: "정답입니다! 역지사지는 '처지를 바꾸어 생각한다'라는 뜻으로 도덕적 소통과 배려의 가장 핵심적인 실천 방향입니다."
             }
@@ -1277,7 +1277,7 @@
                             if (docSnap.exists() && !isExplicitLogout) {
                                 const data = docSnap.data();
                                 currentUser = {
-                                    name: data.name,
+                                    name: data.name || user.displayName || user.email || "학생",
                                     role: data.role || 'student'
                                 };
                                 localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
@@ -1290,9 +1290,9 @@
                                 const savedUser = localStorage.getItem('ethicsUser');
                                 if (savedUser && !isExplicitLogout) {
                                     currentUser = JSON.parse(savedUser);
+                                    // 1학기 피드백 반영: else 블록 내 DB 동기화 시 role 필드 제거하여 덮어쓰기 오동작 원천 차단
                                     await setDoc(userDocRef, {
                                         name: currentUser.name,
-                                        role: currentUser.role,
                                         updatedAt: new Date().toISOString()
                                     }, { merge: true });
                                 } else {
@@ -1401,7 +1401,6 @@
             document.getElementById('login-modal').classList.remove('hidden');
             document.getElementById('login-modal').classList.add('flex');
             document.getElementById('login-username').value = '';
-            const adminCodeInput = document.getElementById('admin-code');
             const emailInput = document.getElementById('login-email');
             const passwordInput = document.getElementById('login-password');
             if (emailInput) emailInput.value = '';
@@ -1416,6 +1415,7 @@
 
         function selectLoginRole(role) {
             selectedRole = role;
+            // 2학기 피드백 반영: 하드코딩된 'admin-code-wrap' 제어 기능은 모달 마크업 제거에 맞춰 자연스럽게 무시됩니다.
             const wrap = document.getElementById('admin-code-wrap');
             if (wrap) {
               if (role === 'admin') wrap.classList.remove('hidden');
@@ -1434,68 +1434,70 @@
             }
         }
 
+        // --- SUBMIT LOGIN FUNCTION (INTEGRATED AS REQUESTED) ---
         async function submitLogin() {
             const name = document.getElementById('login-username').value.trim();
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
-            
+
             if (!email || !password) {
-              showToast("입력 필요", "이메일과 비밀번호를 입력해주세요.", "warning");
-              return;
-            }  
+                showToast("입력 필요", "이메일과 비밀번호를 입력해주세요.", "warning");
+                return;
+            }
+
+            if (!auth || !db) {
+                showToast("오류", "인증 초기화가 아직 완료되지 않았습니다.", "warning");
+                return;
+            }
+
+            let cred;
+            try {
+                cred = await signInWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                console.error("LOGIN_ERR:", err.code, err.message);
+                showToast("로그인 실패", `${err.code}`, "warning");
+                return;
+            }
+
+            const uid = cred.user.uid;
+            const userDocRef = doc(db, 'artifacts', appId, 'users', uid);
+
+            let storedRole = 'student';
+            try {
+                const snap = await getDoc(userDocRef);
+                if (snap.exists() && snap.data().role === 'admin') storedRole = 'admin';
+            } catch (e) {
+                console.warn("Role read failed:", e);
+            }
+
+            if (selectedRole === 'admin' && storedRole !== 'admin') {
+                await signOut(auth); // 핵심: 실제 로그인 상태도 즉시 해제
+                showToast("로그인 거부", "관리자 권한 계정만 관리자 모드로 로그인할 수 있습니다.", "warning");
+                return;
+            }
+
+            const displayName =
+                name ||
+                (cred.user.displayName ? cred.user.displayName : (storedRole === 'admin' ? '도덕 선생님' : '학생'));
 
             try {
-              await signInWithEmailAndPassword(auth, email, password);
-            } catch (err) {
-              console.error("LOGIN_ERR:", err.code, err.message);
-              showToast("로그인 실패", `${err.code}`, "warning");
-              return;
-            }
-            
-            const displayName = name || (selectedRole === 'student' ? '학생' : '도덕 선생님');
-
-            localStorage.removeItem('explicitLogout');
-
-            let safeRole = 'student';
-
-            // 관리자 로그인 차단 로직
-            if (db && userId) {
-                try {
-                const userDocRef = doc(db, 'artifacts', appId, 'users', userId);
-                const docSnap = await getDoc(userDocRef);
-
-                const storedRole = (docSnap.exists() && docSnap.data().role === 'admin') ? 'admin' : 'student';
-        
-                if (selectedRole === 'admin' && storedRole !== 'admin') {
-                    showToast("로그인 거부", "관리자 권한 계정만 관리자 모드로 로그인할 수 있습니다.", "warning");
-                    return;
-                }
-                safeRole = storedRole;
-                    
                 await setDoc(userDocRef, {
                     name: displayName,
                     updatedAt: new Date().toISOString()
                 }, { merge: true });
-            } catch (err) {
-                console.warn("Role verification failed:", err);
-                if (selectedRole === 'admin') {
-                    showToast("로그인 거부", "관리자 권한 확인에 실패했습니다.", "warning");
-                    return;
-                }
+            } catch (e) {
+                console.warn("Name sync failed:", e);
             }
-        } else if (selectedRole === 'admin') {
-            showToast("로그인 거부", "관리자 권한 확인을 위한 인증 상태가 필요합니다.", "warning");
-            return;
+
+            currentUser = { name: displayName, role: storedRole };
+            localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
+            localStorage.removeItem('explicitLogout');
+
+            closeLoginModal();
+            triggerConfetti();
+            updateAuthUI();
+            showToast("로그인 성공!", `${currentUser.name}님, 로그인되었습니다.`, "success");
         }
-
-        currentUser = { name: displayName, role: safeRole };
-        localStorage.setItem('ethicsUser', JSON.stringify(currentUser));
-
-        closeLoginModal();
-        triggerConfetti();
-        updateAuthUI();
-        showToast("로그인 성공!", `${currentUser.name}님, 로그인되었습니다.`, "success");
-    }
 
         // --- ADMIN MODULE CONTROLS (Firestore Integration) ---
         function openAdminModal() {
