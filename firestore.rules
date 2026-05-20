@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdminUser(appId) {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/artifacts/$(appId)/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // User profile documents
+    match /artifacts/{appId}/users/{uid} {
+      allow read: if isOwner(uid);
+
+      // Initial profile creation: role must be student
+      allow create: if isOwner(uid)
+        && request.resource.data.role == 'student';
+
+      // Owner can update profile, but cannot change role
+      allow update: if isOwner(uid)
+        && request.resource.data.role == resource.data.role;
+    }
+
+    // Public app data: read for signed-in users, write only for admins
+    match /artifacts/{appId}/public/{document=**} {
+      allow read: if isSignedIn();
+      allow write: if isAdminUser(appId);
+    }
+  }
+}
